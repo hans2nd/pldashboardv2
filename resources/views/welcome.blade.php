@@ -12,7 +12,7 @@
                     </h2>
                 </div>
                 <div class="card-body">
-                    Test Dashboard
+                    Test Dashboard Lagi
                 </div>
             </div>
         </div>
