@@ -24,7 +24,7 @@ class DashboardController extends Controller implements HasMiddleware
             'breadcrumbs' => 'Dashboard',
             'menu' => 'dashboard'
         ];
-        return view('sales.allSales', $data);
+        return view('welcome', $data);
     }
 
     public function logistic_inventory_status()

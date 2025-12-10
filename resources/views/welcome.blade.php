@@ -12,9 +12,7 @@
                     </h2>
                 </div>
                 <div class="card-body">
-                    <iframe title="New_PanganLestari_Sales1.1 1" width="100%" height="800"
-                        src="https://app.powerbi.com/view?r=eyJrIjoiYTk2NDAyOTUtNGM3ZS00YTEzLWI4MDQtZDBmMTE1ZmVkNjMxIiwidCI6ImEzNjFjYzRmLTRmYjktNGE2Zi1iMmMxLWE1ZjVkODU3OTEwYSIsImMiOjEwfQ%3D%3D"
-                        frameborder="0" allowFullScreen="true"></iframe>
+                    Test Dashboard
                 </div>
             </div>
         </div>
