@@ -47,6 +47,46 @@ class DashboardController extends Controller implements HasMiddleware
         return view('sales.sidoarjo_fs', $data);
     }
 
+    public function sidoarjo_distributor()
+    {
+        $data = [
+            'title' => 'Sidoarjo Sales',
+            'breadcrumbs' => 'Distributor Sidoarjo',
+            'menu' => 'sidoarjoDist'
+        ];
+        return view('sales.sidoarjo_dist', $data);
+    }
+
+    public function sidoarjo_retail()
+    {
+        $data = [
+            'title' => 'Sidoarjo Sales',
+            'breadcrumbs' => 'Retail (GT & MT) Sidoarjo',
+            'menu' => 'sidoarjoRetail'
+        ];
+        return view('sales.sidoarjo_retail', $data);
+    }
+
+    public function sidoarjo_fsm()
+    {
+        $data = [
+            'title' => 'Sidoarjo Sales',
+            'breadcrumbs' => 'Food Service Manager Sidoarjo',
+            'menu' => 'sidoarjoFsm'
+        ];
+        return view('sales.sidoarjo_fsm', $data);
+    }
+
+    public function sidoarjo_privatelabel()
+    {
+        $data = [
+            'title' => 'Sidoarjo Sales',
+            'breadcrumbs' => 'Private Label Sidoarjo',
+            'menu' => 'sidoarjoPrivatelabel'
+        ];
+        return view('sales.sidoarjo_privatelabel', $data);
+    }
+
     public function logistic_inventory_status()
     {
         $data = [

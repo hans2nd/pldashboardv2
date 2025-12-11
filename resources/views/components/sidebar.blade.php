@@ -26,13 +26,14 @@
             <ul class="nav nav-secondary">
 
                 @can('sales view')
-                    <li class="nav-item {{ in_array($slot, ['allSalesSda', 'sidoarjoFs']) ? 'active' : '' }}">
+                    <li
+                        class="nav-item {{ in_array($slot, ['allSalesSda', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#submenu">
                             <i class="fas fa-chart-line"></i>
                             <p>Sales Dashboard</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs']) ? 'show' : '' }}"
+                        <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'show' : '' }}"
                             id="submenu">
                             <ul class="nav nav-collapse">
                                 <li>
@@ -40,12 +41,18 @@
                                         <span class="sub-item">Sidoarjo</span>
                                         <span class="caret"></span>
                                     </a>
-                                    <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs']) ? 'show' : '' }}"
+                                    <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'show' : '' }}"
                                         id="subnav1">
                                         <ul class="nav nav-collapse subnav">
                                             <li class="nav-item {{ $slot == 'allSalesSda' ? 'active' : '' }}">
                                                 <a href="{{ route('dashboard.sdaAllSales') }}">
                                                     <span class="sub-item">Over All Channel</span>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item {{ $slot == 'sidoarjoDist' ? 'active' : '' }}">
+                                                <a href="{{ route('dashboard.sidoarjo_distributor') }}">
+                                                    <span class="sub-item">Distributor</span>
                                                 </a>
                                             </li>
 
@@ -55,17 +62,25 @@
                                                 </a>
                                             </li>
 
-                                            <li class="nav-item ">
-                                                <a href="#">
+                                            <li class="nav-item {{ $slot == 'sidoarjoPrivatelabel' ? 'active' : '' }}">
+                                                <a href="{{ route('dashboard.sidoarjo_privatelabel') }}">
+                                                    <span class="sub-item">Private Label</span>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item {{ $slot == 'sidoarjoRetail' ? 'active' : '' }}">
+                                                <a href="{{ route('dashboard.sidoarjo_retail') }}">
                                                     <span class="sub-item">Retail (MT & GT)</span>
                                                 </a>
                                             </li>
 
-                                            <li class="nav-item ">
-                                                <a href="#">
-                                                    <span class="sub-item">Distributor</span>
+
+                                            <li class="nav-item {{ $slot == 'sidoarjoFsm' ? 'active' : '' }}">
+                                                <a href="{{ route('dashboard.sidoarjo_fsm') }}">
+                                                    <span class="sub-item">Food Services Manager</span>
                                                 </a>
                                             </li>
+
                                         </ul>
                                     </div>
                                 </li>

@@ -6,13 +6,14 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        Sales Dashboard
-                    </h2>
-                </div>
                 <div class="card-body">
-                    Test Dashboard Lagi
+                    <h1>Selamat Datang di Dashboard Pangan Lestari</h1>
+                    <br>
+                    <hr>
+                    Hallo, {{ Auth::user()->name }}
+                    <br>
+                    <br>
+
                 </div>
             </div>
         </div>

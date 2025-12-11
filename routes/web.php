@@ -28,6 +28,10 @@ Route::middleware('authcheck')->group(function() {
     # Sales Sidoarjo
     Route::get('/sdaAllSales', [DashboardController::class, 'sdaAllSales'])->name('dashboard.sdaAllSales');
     Route::get('/sdaFS', [DashboardController::class, 'sidoarjo_fs'])->name('dashboard.sidoarjo_fs');
+    Route::get('/sdaDistributor', [DashboardController::class, 'sidoarjo_distributor'])->name('dashboard.sidoarjo_distributor');
+    Route::get('/sdaRetail', [DashboardController::class, 'sidoarjo_retail'])->name('dashboard.sidoarjo_retail');
+    Route::get('/sdaFSM', [DashboardController::class, 'sidoarjo_fsm'])->name('dashboard.sidoarjo_fsm');
+    Route::get('/sdaPrivateLabel', [DashboardController::class, 'sidoarjo_privatelabel'])->name('dashboard.sidoarjo_privatelabel');
 
 
 
