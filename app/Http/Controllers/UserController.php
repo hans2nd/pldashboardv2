@@ -48,8 +48,8 @@ class UserController extends Controller implements HasMiddleware
         }
 
         // Sorting kolom
-        $sort = $request->get('sort', 'created_at');
-        $direction = $request->get('direction', 'desc');
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
         $query->orderBy($sort, $direction);
 
         $data = [
