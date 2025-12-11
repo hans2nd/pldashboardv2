@@ -21,7 +21,7 @@
                         <select name="role" class="form-control form-select form-select-sm" style="max-width: 200px;"
                             onchange="this.form.submit()">
                             <option value="">-- Semua Role --</option>
-                            @foreach (\Spatie\Permission\Models\Role::all() as $role)
+                            @foreach (\Spatie\Permission\Models\Role::all()->sortBy('name') as $role)
                                 <option value="{{ $role->name }}"
                                     {{ request('role') == $role->name ? 'selected' : '' }}>
                                     {{ ucfirst($role->name) }}
