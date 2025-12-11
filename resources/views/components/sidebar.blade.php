@@ -3,7 +3,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
 
-            <a href="#  " class="logo">
+            <a href="/dashboard" class="logo">
                 <img src="{{ asset('assets/template1') }}/img/kaiadmin/images.png" alt="navbar brand" class="navbar-brand"
                     height="40" width="180">
             </a>
@@ -26,11 +26,51 @@
             <ul class="nav nav-secondary">
 
                 @can('sales view')
-                    <li class="nav-item {{ $slot == 'home' ? 'active' : '' }}">
-                        <a href="/dashboard">
+                    <li class="nav-item {{ in_array($slot, ['allSalesSda', 'sidoarjoFs']) ? 'active' : '' }}">
+                        <a data-bs-toggle="collapse" href="#submenu">
                             <i class="fas fa-chart-line"></i>
                             <p>Sales Dashboard</p>
+                            <span class="caret"></span>
                         </a>
+                        <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs']) ? 'show' : '' }}"
+                            id="submenu">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a data-bs-toggle="collapse" href="#subnav1">
+                                        <span class="sub-item">Sidoarjo</span>
+                                        <span class="caret"></span>
+                                    </a>
+                                    <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs']) ? 'show' : '' }}"
+                                        id="subnav1">
+                                        <ul class="nav nav-collapse subnav">
+                                            <li class="nav-item {{ $slot == 'allSalesSda' ? 'active' : '' }}">
+                                                <a href="{{ route('dashboard.sdaAllSales') }}">
+                                                    <span class="sub-item">Over All Channel</span>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item {{ $slot == 'sidoarjoFs' ? 'active' : '' }}">
+                                                <a href="{{ route('dashboard.sidoarjo_fs') }}">
+                                                    <span class="sub-item">Food Services</span>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item ">
+                                                <a href="#">
+                                                    <span class="sub-item">Retail (MT & GT)</span>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item ">
+                                                <a href="#">
+                                                    <span class="sub-item">Distributor</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                 @endcan
 

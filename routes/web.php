@@ -25,13 +25,16 @@ Route::middleware('authcheck')->group(function() {
     Route::get('/logistic_inventory_status', [DashboardController::class, 'logistic_inventory_status'])->name('dashboard.logistic_inventory_status');
     Route::get('/logistic_inventory_moi', [DashboardController::class, 'logistic_inventory_moi'])->name('dashboard.logistic_inventory_moi');
 
-    
-        Route::resource('users', UserController::class);
+    # Sales Sidoarjo
+    Route::get('/sdaAllSales', [DashboardController::class, 'sdaAllSales'])->name('dashboard.sdaAllSales');
+    Route::get('/sdaFS', [DashboardController::class, 'sidoarjo_fs'])->name('dashboard.sidoarjo_fs');
 
+
+
+        Route::resource('users', UserController::class);
         # Roles
         Route::resource('roles', RoleController::class);
         // Route::delete('/roles',[RoleController::class, 'destroy'])->name('roles.destroy');
-
         # Permissions
         Route::resource('permissions', PermissionController::class);
         // Route::delete('/permissions',[PermissionController::class, 'destroy'])->name('permissions.destroy');
