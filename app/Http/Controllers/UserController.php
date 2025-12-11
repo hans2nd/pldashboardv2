@@ -7,9 +7,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
 class UserController extends Controller implements HasMiddleware
@@ -235,5 +237,36 @@ class UserController extends Controller implements HasMiddleware
         } catch (Exception $e) {
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
+    }
+
+    public function updateSelfPassword(Request $request)
+    {
+        // 1. Validasi Input
+        $request->validate([
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
+        ], [
+            // Pesan Kustom untuk kasus gagal
+            'password.required' => 'Password baru wajib diisi.',
+            'password.min' => 'Password baru minimal harus 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+            'password.different' => 'Password baru tidak boleh sama dengan Password lama.',
+        ]);
+
+        $user = Auth::user();
+
+        // 2. Cek Password Lama (Penting: harus menggunakan ValidationException)
+        if (!Hash::check($request->current_password, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['Password lama yang Anda masukkan tidak benar.'],
+            ])->redirectTo(url()->previous() . '#userChangePasswordModal');
+        }
+
+        // 3. Hash dan Simpan Password Baru
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // 4. Redirect dengan pesan sukses
+        return redirect()->route('dashboard.index')->with('success', 'Password Anda berhasil diubah.');
     }
 }

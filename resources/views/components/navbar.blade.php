@@ -50,6 +50,13 @@
                         </li>
                         <li>
                             <div class="dropdown-divider"></div>
+
+                            {{-- TOMBOL BARU: Change Password --}}
+                            <a href="#" class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#userChangePasswordModal">
+                                Change Password
+                            </a>
+                            <div class="dropdown-divider"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="dropdown-item">Logout</button>

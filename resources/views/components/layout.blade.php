@@ -66,8 +66,13 @@
             </footer>
         </div>
     </div>
+    @include('auth.changepassword')
     @include('components.alert')
+
+
     <x-footer />
+
+    @stack('scripts')
 </body>
 
 </html>
