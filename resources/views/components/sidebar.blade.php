@@ -3,7 +3,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
 
-            <a href="/dashboard" class="logo">
+            <a href="{{ route('dashboard.index') }}" class="logo">
                 <img src="{{ asset('assets/template1') }}/img/kaiadmin/images.png" alt="navbar brand" class="navbar-brand"
                     height="40" width="180">
             </a>
