@@ -79,7 +79,7 @@
 
                         <div class="form-group">
                             <label for="password" class="control-label" id="password">Password</label>
-                            <input type="text"
+                            <input type="password"
                                 class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" id="password"
                                 name="password" placeholder="Enter your password"
                                 value="{{ old('password', $user->password) }}" disabled>

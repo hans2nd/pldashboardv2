@@ -21,11 +21,12 @@
                         <select name="role" class="form-control form-select form-select-sm" style="max-width: 200px;"
                             onchange="this.form.submit()">
                             <option value="">-- Semua Role --</option>
-                            <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
-                            <option value="sales" {{ request('role') == 'sales' ? 'selected' : '' }}>Sales</option>
-                            <option value="logistic" {{ request('role') == 'logistic' ? 'selected' : '' }}>Logistic
-                            </option>
+                            @foreach (\Spatie\Permission\Models\Role::all() as $role)
+                                <option value="{{ $role->name }}"
+                                    {{ request('role') == $role->name ? 'selected' : '' }}>
+                                    {{ ucfirst($role->name) }}
+                                </option>
+                            @endforeach
                         </select>
 
                         <x-search-bar :action="route('users.index')" placeholder="Cari nama atau email..." />
