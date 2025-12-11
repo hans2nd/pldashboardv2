@@ -12,10 +12,34 @@ class DashboardController extends Controller implements HasMiddleware
 
     public static function middleware(): array
     {
+        // return [
+        //     new Middleware('permission:sales view', only: ['index','show']),
+        //     new Middleware('permission:logistic view', only: ['logistic_inventory_status','logistic_inventory_moi']),
+        // ];
+
         return [
-            new Middleware('permission:sales view', only: ['index','show']),
-            new Middleware('permission:logistic view', only: ['logistic_inventory_status','logistic_inventory_moi']),
+            // 1. Semua metode memerlukan user login (middleware:auth)
+            new Middleware('auth'), 
+            
+            // 2. Terapkan permission spesifik HANYA pada route yang memerlukannya
+            
+            // Metode sales (index, show dihilangkan)
+            new Middleware('permission:sales view', only: [
+                'sdaAllSales', 
+                'sidoarjo_fs', 
+                'sidoarjo_distributor', 
+                'sidoarjo_retail', 
+                'sidoarjo_fsm', 
+                'sidoarjo_privatelabel',
+            ]),
+            
+            // Metode logistic
+            new Middleware('permission:logistic view', only: [
+                'logistic_inventory_status', 
+                'logistic_inventory_moi'
+            ]),
         ];
+
     }
     public function index()
     {

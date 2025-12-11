@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
-                        Form Registrasi
+                        Form Add Users
                     </h2>
                 </div>
                 <div class="card-body">

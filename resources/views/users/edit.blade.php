@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
-                        Form Edit Registrasi
+                        Form Edit Users
                     </h2>
                 </div>
                 <div class="card-body">
@@ -77,17 +77,26 @@
                             @endif
                         </div>
 
-                        <div class="form-group">
-                            <label for="password" class="control-label" id="password">Password</label>
-                            <input type="password"
-                                class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" id="password"
-                                name="password" placeholder="Enter your password"
-                                value="{{ old('password', $user->password) }}" disabled>
-                            @if ($errors->has('password'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('password') }}
-                                </div>
-                            @endif
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label for="password" class="control-label" id="password">Password</label>
+                                <input type="password"
+                                    class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                                    id="password" name="password" placeholder="Enter your password"
+                                    value="{{ old('password', $user->password) }}" disabled>
+                                @if ($errors->has('password'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('password') }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                {{-- Tombol untuk memicu Modal --}}
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                    data-bs-target="#changePasswordModal">
+                                    <i class="fas fa-key"></i> Change Password
+                                </button>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -115,4 +124,57 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
+        aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Ubah Password untuk {{ $user->name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                {{-- Form yang akan memanggil route baru --}}
+                <form id="changePasswordForm" action="{{ route('users.password.update', $user->username) }}"
+                    method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="new_password" class="control-label">Password Baru</label>
+                            <input type="password" class="form-control" id="new_password" name="password" required
+                                placeholder="Masukkan Password Baru">
+                            {{-- Tambahkan error feedback di sini jika menggunakan Livewire/Alpine atau JS, atau pastikan error kembali ke modal --}}
+                        </div>
+                        <div class="form-group">
+                            <label for="new_password_confirmation" class="control-label">Konfirmasi Password
+                                Baru</label>
+                            <input type="password" class="form-control" id="new_password_confirmation"
+                                name="password_confirmation" required placeholder="Ulangi Password Baru">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        @if ($errors->any())
+            // Periksa apakah error berasal dari field password (yang ada di modal)
+            if (
+                '{{ $errors->has('password') }}' ||
+                '{{ $errors->has('password_confirmation') }}'
+            ) {
+                // Tampilkan kembali modal jika ada error password
+                var myModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+                myModal.show();
+            }
+        @endif
+    </script>
 </x-layout>

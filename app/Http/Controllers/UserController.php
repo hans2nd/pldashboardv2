@@ -18,6 +18,7 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
+            new Middleware('auth'),
             new Middleware('permission:users view', only: ['index','show']),
             new Middleware('permission:users create', only: ['create', 'store']),
             new Middleware('permission:users edit', only: ['edit', 'update']),
@@ -205,6 +206,34 @@ class UserController extends Controller implements HasMiddleware
             return redirect()->route('users.index')->with('success', 'users deleted successfully');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Failed to delete users'. $e->getMessage());
+        }
+    }
+
+    public function updatePassword(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|min:3|max:255',
+            'password_confirmation' => 'required|same:password',
+        ], [
+            'password.required' => 'Password harus diisi',
+            'password.min' => 'Password minimal 3 karakter',
+            'password.max' => 'Password maksimal 255 karakter',
+            'password_confirmation.required' => 'Konfirmasi password harus diisi',
+            'password_confirmation.same' => 'Konfirmasi password tidak sama dengan password',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('users.edit', $user->username)->withInput()->withErrors($validator);
+        }
+
+        try {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            return redirect()->route('users.edit', $user->username)->with('success_html', 'Password berhasil diubah.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 }

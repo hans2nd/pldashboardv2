@@ -36,6 +36,7 @@ Route::middleware('authcheck')->group(function() {
 
 
         Route::resource('users', UserController::class);
+        Route::put('users/{user:username}/password', [UserController::class, 'updatePassword'])->name('users.password.update');
         # Roles
         Route::resource('roles', RoleController::class);
         // Route::delete('/roles',[RoleController::class, 'destroy'])->name('roles.destroy');

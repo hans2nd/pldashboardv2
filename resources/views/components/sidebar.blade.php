@@ -129,7 +129,7 @@
                 @endcan
 
 
-                @can('user view')
+                @can('users view')
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
