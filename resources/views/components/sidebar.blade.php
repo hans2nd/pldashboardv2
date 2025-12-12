@@ -27,14 +27,14 @@
 
                 @can('sales view')
                     <li
-                        class="nav-item {{ in_array($slot, ['allSalesSda', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'active' : '' }}">
+                        class="nav-item {{ in_array($slot, ['sdaAllSales', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#submenu">
                             <i class="fas fa-chart-line"></i>
                             <p>Sales Dashboard</p>
                             <span class="caret"></span>
                         </a>
                         @can('sales sidoarjo')
-                            <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'show' : '' }}"
+                            <div class="collapse {{ in_array($slot, ['sdaAllSales', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'show' : '' }}"
                                 id="submenu">
                                 <ul class="nav nav-collapse">
                                     <li>
@@ -42,12 +42,12 @@
                                             <span class="sub-item">Sidoarjo</span>
                                             <span class="caret"></span>
                                         </a>
-                                        <div class="collapse {{ in_array($slot, ['allSalesSda', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'show' : '' }}"
+                                        <div class="collapse {{ in_array($slot, ['sdaAllSales', 'sidoarjoFs', 'sidoarjoDist', 'sidoarjoRetail', 'sidoarjoFsm', 'sidoarjoPrivatelabel']) ? 'show' : '' }}"
                                             id="subnav1">
                                             <ul class="nav nav-collapse subnav">
 
                                                 @can('sales allchannel view')
-                                                    <li class="nav-item {{ $slot == 'allSalesSda' ? 'active' : '' }}">
+                                                    <li class="nav-item {{ $slot == 'sdaAllSales' ? 'active' : '' }}">
                                                         <a href="{{ route('dashboard.sdaAllSales') }}">
                                                             <span class="sub-item">Over All Channel</span>
                                                         </a>

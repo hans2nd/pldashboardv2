@@ -3,12 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\DashboardSetting;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
 
 class DashboardController extends Controller implements HasMiddleware
 {
+    private function getIframeByKey($key, $defaultTitle, $defaultSrc = null)
+    {
+
+        return DashboardSetting::firstOrCreate(
+            ['key' => $key],
+            [
+                'title' => $defaultTitle,
+                'src' => $defaultSrc ?? 'about:blank', // src default jika tidak ada
+            ]
+        );
+    }
+
+    private function extractAttribute($html, $attribute)
+    {
+        // Cari pola attribute="value" atau attribute='value'
+        if (preg_match('/' . $attribute . '=["\']([^"\']+)["\']/i', $html, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
 
     public static function middleware(): array
     {
@@ -53,70 +75,113 @@ class DashboardController extends Controller implements HasMiddleware
 
     public function sdaAllSales()
     {
+        $key = 'sdaAllSales';
+        $breadcrumbs = 'All Sales Sidoarjo';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Sidoarjo Sales',
-            'breadcrumbs' => 'All Sales Sidoarjo',
-            'menu' => 'allSalesSda'
+            'breadcrumbs' => $breadcrumbs,
+            'menu' => $key,
+            'iframe' => $iframe,
+            // 'iframe' => DashboardSetting::all()->first()
         ];
         return view('sales.sdaAllSales', $data);
     }
 
     public function sidoarjo_fs()
     {
+        $key = 'sidoarjoFs';
+        $breadcrumbs = 'Food Service Sidoarjo';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Sidoarjo Sales',
             'breadcrumbs' => 'Food Service Sidoarjo',
-            'menu' => 'sidoarjoFs'
+            'menu' => 'sidoarjoFs',
+            'iframe' => $iframe
         ];
         return view('sales.sidoarjo_fs', $data);
     }
 
     public function sidoarjo_distributor()
     {
+
+        $key = 'sidoarjoDist';
+        $breadcrumbs = 'Distributor Sidoarjo';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Sidoarjo Sales',
             'breadcrumbs' => 'Distributor Sidoarjo',
-            'menu' => 'sidoarjoDist'
+            'menu' => 'sidoarjoDist',
+            'iframe' => $iframe
         ];
         return view('sales.sidoarjo_dist', $data);
     }
 
     public function sidoarjo_retail()
     {
+        $key = 'sidoarjoRetail';
+        $breadcrumbs = 'Retail (GT & MT) Sidoarjo';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Sidoarjo Sales',
             'breadcrumbs' => 'Retail (GT & MT) Sidoarjo',
-            'menu' => 'sidoarjoRetail'
+            'menu' => 'sidoarjoRetail',
+            'iframe' => $iframe
         ];
         return view('sales.sidoarjo_retail', $data);
     }
 
     public function sidoarjo_fsm()
     {
+        $key = 'sidoarjoFsm';
+        $breadcrumbs = 'Food Service Manager Sidoarjo';
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Sidoarjo Sales',
             'breadcrumbs' => 'Food Service Manager Sidoarjo',
-            'menu' => 'sidoarjoFsm'
+            'menu' => 'sidoarjoFsm',
+            'iframe' => $iframe
         ];
         return view('sales.sidoarjo_fsm', $data);
     }
 
     public function sidoarjo_privatelabel()
     {
+        $key = 'sidoarjoPrivatelabel';
+        $breadcrumbs = 'Private Label Sidoarjo';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Sidoarjo Sales',
             'breadcrumbs' => 'Private Label Sidoarjo',
-            'menu' => 'sidoarjoPrivatelabel'
+            'menu' => 'sidoarjoPrivatelabel',
+            'iframe' => $iframe
         ];
         return view('sales.sidoarjo_privatelabel', $data);
     }
 
     public function logistic_inventory_status()
     {
+        $key = 'logisticInventoryStatus';
+        $breadcrumbs = 'Inventory Status';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Dashboard Logistic',
             'breadcrumbs' => 'Inventory Status',
-            'menu' => 'logistic'
+            'menu' => 'logistic',
+            'iframe' => $iframe
         ];
 
         return view('logistics.inventoryStatus',$data);
@@ -124,12 +189,70 @@ class DashboardController extends Controller implements HasMiddleware
 
     public function logistic_inventory_moi()
     {
+        $key = 'logisticInventoryMOI';
+        $breadcrumbs = 'Inventory MOI';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
         $data = [
             'title' => 'Dashboard Logistic',
             'breadcrumbs' => 'Inventory MOI',
-            'menu' => 'inventoryMOI'
+            'menu' => 'inventoryMOI',
+            'iframe' => $iframe
         ];
 
         return view('logistics.inventoryMOI',$data);
     }
+
+    public function update(Request $request, string $key)
+    {
+        // 1. Validasi input
+        $validator = Validator::make($request->all(), [
+            'iframe_code' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            // Menggunakan Laravel default response for API
+            return response()->json(['success' => false, 'message' => 'Input iframe tidak valid.', 'errors' => $validator->errors()], 422);
+        }
+
+        $iframeCode = $request->input('iframe_code');
+        
+        // 2. Ekstrak 'src' dan 'title' dari kode iframe
+        $src = $this->extractAttribute($iframeCode, 'src');
+        $title = $this->extractAttribute($iframeCode, 'title');
+
+        if (!$src) {
+            return response()->json(['success' => false, 'message' => 'Gagal mengekstrak atribut SRC dari kode iframe. Pastikan tag <iframe> sudah benar.'], 400);
+        }
+
+        // Jika title tidak ditemukan, gunakan 'breadcrumbs' sebagai fallback, atau gunakan nilai saat ini.
+        // Di sini saya akan menggunakan title yang diekstrak, jika tidak ada, gunakan 'Default Title'
+        if (!$title) {
+             $title = 'Dashboard Setting (' . $key . ')'; 
+        }
+
+        try {
+            // 3. Cari dan update data iframe
+            $iframe = DashboardSetting::where('key', $key)->firstOrFail();
+            
+            $iframe->update([
+                'title' => $title,
+                'src' => $src,
+            ]);
+
+            return response()->json([
+                'success' => true, 
+                'message' => 'Data iframe berhasil diupdate.',
+                'iframe' => $iframe, 
+            ]);
+
+        } catch (\Exception $e) {
+            // Log error untuk debugging yang lebih baik
+            \Log::error("Failed to update iframe (Key: $key): " . $e->getMessage());
+            
+            return response()->json(['success' => false, 'message' => 'Gagal mengupdate iframe. Silakan periksa log server.'], 500);
+        }
+    }
+    
 }
