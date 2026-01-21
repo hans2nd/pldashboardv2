@@ -47,4 +47,9 @@ Route::middleware('authcheck')->group(function() {
         # Permissions
         Route::resource('permissions', PermissionController::class);
         // Route::delete('/permissions',[PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+    # Operational Dashboard
+    Route::get('/operational/production', [DashboardController::class, 'operationalProduction'])->name('dashboard.operational_production');
+    Route::get('/operational/quality', [DashboardController::class, 'operationalQuality'])->name('dashboard.operational_quality');
+    Route::get('/operational/maintenance', [DashboardController::class, 'operationalMaintenance'])->name('dashboard.operational_maintenance');
 });

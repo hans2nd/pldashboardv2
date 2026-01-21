@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DashboardSetting;
+use App\Services\DashboardService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -11,34 +12,25 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 
 class DashboardController extends Controller implements HasMiddleware
 {
+    protected DashboardService $dashboardService;
+
+    public function __construct(DashboardService $dashboardService)
+    {
+        $this->dashboardService = $dashboardService;
+    }
+
     private function getIframeByKey($key, $defaultTitle, $defaultSrc = null)
     {
-
-        return DashboardSetting::firstOrCreate(
-            ['key' => $key],
-            [
-                'title' => $defaultTitle,
-                'src' => $defaultSrc ?? 'about:blank', // src default jika tidak ada
-            ]
-        );
+        return $this->dashboardService->getIframeByKey($key, $defaultTitle, $defaultSrc);
     }
 
     private function extractAttribute($html, $attribute)
     {
-        // Cari pola attribute="value" atau attribute='value'
-        if (preg_match('/' . $attribute . '=["\']([^"\']+)["\']/i', $html, $matches)) {
-            return $matches[1];
-        }
-        return null;
+        return $this->dashboardService->extractAttribute($html, $attribute);
     }
 
     public static function middleware(): array
     {
-        // return [
-        //     new Middleware('permission:sales view', only: ['index','show']),
-        //     new Middleware('permission:logistic view', only: ['logistic_inventory_status','logistic_inventory_moi']),
-        // ];
-
         return [
             // 1. Semua metode memerlukan user login (middleware:auth)
             new Middleware('auth'), 
@@ -59,6 +51,13 @@ class DashboardController extends Controller implements HasMiddleware
             new Middleware('permission:logistic view', only: [
                 'logistic_inventory_status', 
                 'logistic_inventory_moi'
+            ]),
+
+            // Metode operational
+            new Middleware('permission:operational view', only: [
+                'operationalProduction',
+                'operationalQuality',
+                'operationalMaintenance',
             ]),
         ];
 
@@ -202,6 +201,61 @@ class DashboardController extends Controller implements HasMiddleware
         ];
 
         return view('logistics.inventoryMOI',$data);
+    }
+
+    // ========================
+    // OPERATIONAL DASHBOARD
+    // ========================
+
+    public function operationalProduction()
+    {
+        $key = 'operationalProduction';
+        $breadcrumbs = 'Production Status';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
+        $data = [
+            'title' => 'Operational Dashboard',
+            'breadcrumbs' => $breadcrumbs,
+            'menu' => $key,
+            'iframe' => $iframe
+        ];
+
+        return view('operational.production', $data);
+    }
+
+    public function operationalQuality()
+    {
+        $key = 'operationalQuality';
+        $breadcrumbs = 'Quality Control';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
+        $data = [
+            'title' => 'Operational Dashboard',
+            'breadcrumbs' => $breadcrumbs,
+            'menu' => $key,
+            'iframe' => $iframe
+        ];
+
+        return view('operational.quality', $data);
+    }
+
+    public function operationalMaintenance()
+    {
+        $key = 'operationalMaintenance';
+        $breadcrumbs = 'Maintenance';
+
+        $iframe = $this->getIframeByKey($key, $breadcrumbs);
+
+        $data = [
+            'title' => 'Operational Dashboard',
+            'breadcrumbs' => $breadcrumbs,
+            'menu' => $key,
+            'iframe' => $iframe
+        ];
+
+        return view('operational.maintenance', $data);
     }
 
     public function update(Request $request, string $key)
