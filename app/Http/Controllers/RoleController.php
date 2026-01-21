@@ -20,19 +20,28 @@ class RoleController extends Controller implements HasMiddleware
             new Middleware('permission:role view', only: ['index','show']),
             new Middleware('permission:role create', only: ['create', 'store']),
             new Middleware('permission:role edit', only: ['edit', 'update']),
-            new Middleware('permission:role delete', only: ['destroy']),
+            new Middleware('permission:role delete', only: ['destroy', 'bulkDelete']),
         ];
     }
+    
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Role::with('permissions');
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+        
         $data = [
             'title' => 'Page Roles',
             'breadcrumbs' => 'Roles',
             'menu' => 'roles',
-            'roles' => Role::orderBy('name','asc')->paginate(10)
+            'roles' => $query->orderBy('name', 'asc')->paginate(20)
         ];
 
         return view('roles.list', $data);
@@ -153,9 +162,28 @@ class RoleController extends Controller implements HasMiddleware
     {
         try {
             $role->delete();
-            return redirect()->route('roles.index')->with('success', 'role deleted successfully');
+            return redirect()->route('roles.index')->with('success', 'Role deleted successfully');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Failed to delete role'. $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to delete role: '. $e->getMessage());
+        }
+    }
+
+    /**
+     * Bulk delete roles
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:roles,id'
+        ]);
+
+        try {
+            Role::whereIn('id', $request->ids)->delete();
+            return redirect()->route('roles.index')
+                ->with('success', count($request->ids) . ' roles deleted successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete roles: ' . $e->getMessage());
         }
     }
 }

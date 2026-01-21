@@ -20,6 +20,7 @@ class DashboardMenu extends Model
         'type',
         'order',
         'is_active',
+        'permission_name', // Custom permission name (optional)
     ];
 
     protected $casts = [
@@ -53,11 +54,30 @@ class DashboardMenu extends Model
     }
 
     /**
-     * Get the permission name for this menu
+     * Get the permission name for viewing this menu
+     * Format: "{readable name} view" (e.g., "sales dashboard view")
      */
     public function getPermissionNameAttribute(): string
     {
-        return $this->key . ' view';
+        // If custom permission_name is set, use it
+        if (!empty($this->attributes['permission_name'] ?? null)) {
+            return strtolower($this->attributes['permission_name']) . ' view';
+        }
+        
+        // Generate from menu name
+        return strtolower($this->name) . ' view';
+    }
+
+    /**
+     * Get the update permission name for this menu
+     */
+    public function getUpdatePermissionNameAttribute(): string
+    {
+        if (!empty($this->attributes['permission_name'] ?? null)) {
+            return strtolower($this->attributes['permission_name']) . ' update';
+        }
+        
+        return strtolower($this->name) . ' update';
     }
 
     /**
@@ -89,8 +109,13 @@ class DashboardMenu extends Model
      */
     public function getRelatedPermissions(): array
     {
+        $baseName = !empty($this->attributes['permission_name'] ?? null) 
+            ? strtolower($this->attributes['permission_name'])
+            : strtolower($this->name);
+            
         return [
-            $this->key . ' view',
+            $baseName . ' view',
+            $baseName . ' update',
         ];
     }
 }

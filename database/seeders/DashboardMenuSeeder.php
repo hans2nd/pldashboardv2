@@ -9,16 +9,16 @@ use Spatie\Permission\Models\Permission;
 class DashboardMenuSeeder extends Seeder
 {
     /**
-     * Seed the existing dashboard menus to database
+     * Seed the existing dashboard menus to database with clean permission names
      */
     public function run(): void
     {
-        $this->command->info('Seeding Dashboard Menus...');
+        $this->command->info('Seeding Dashboard Menus with clean permissions...');
 
         // =====================
         // SALES DASHBOARD
         // =====================
-        $sales = DashboardMenu::firstOrCreate(
+        $sales = DashboardMenu::updateOrCreate(
             ['key' => 'sales'],
             [
                 'name' => 'Sales Dashboard',
@@ -26,12 +26,13 @@ class DashboardMenuSeeder extends Seeder
                 'type' => 'header',
                 'order' => 1,
                 'is_active' => true,
+                'permission_name' => 'Sales Dashboard',
             ]
         );
-        Permission::firstOrCreate(['name' => 'sales view']);
+        $this->createPermissions('Sales Dashboard');
 
         // Sidoarjo submenu (parent for sales items)
-        $sidoarjo = DashboardMenu::firstOrCreate(
+        $sidoarjo = DashboardMenu::updateOrCreate(
             ['key' => 'sidoarjo'],
             [
                 'name' => 'Sidoarjo',
@@ -40,22 +41,59 @@ class DashboardMenuSeeder extends Seeder
                 'parent_id' => $sales->id,
                 'order' => 1,
                 'is_active' => true,
+                'permission_name' => 'Sales Sidoarjo',
             ]
         );
-        Permission::firstOrCreate(['name' => 'sidoarjo view']);
+        $this->createPermissions('Sales Sidoarjo');
 
         // Sales items under Sidoarjo
         $salesItems = [
-            ['key' => 'sdaAllSales', 'name' => 'Over All Channel', 'route' => 'dashboard.sdaAllSales', 'order' => 1],
-            ['key' => 'sidoarjoDist', 'name' => 'Distributor', 'route' => 'dashboard.sidoarjo_distributor', 'order' => 2],
-            ['key' => 'sidoarjoFs', 'name' => 'Food Services', 'route' => 'dashboard.sidoarjo_fs', 'order' => 3],
-            ['key' => 'sidoarjoPrivatelabel', 'name' => 'Private Label', 'route' => 'dashboard.sidoarjo_privatelabel', 'order' => 4],
-            ['key' => 'sidoarjoRetail', 'name' => 'Retail (MT & GT)', 'route' => 'dashboard.sidoarjo_retail', 'order' => 5],
-            ['key' => 'sidoarjoFsm', 'name' => 'Food Services Manager', 'route' => 'dashboard.sidoarjo_fsm', 'order' => 6],
+            [
+                'key' => 'sdaAllSales', 
+                'name' => 'Over All Channel', 
+                'route' => 'dashboard.sdaAllSales', 
+                'order' => 1,
+                'permission_name' => 'Sales All Channel'
+            ],
+            [
+                'key' => 'sidoarjoDist', 
+                'name' => 'Distributor', 
+                'route' => 'dashboard.sidoarjo_distributor', 
+                'order' => 2,
+                'permission_name' => 'Sales Distributor'
+            ],
+            [
+                'key' => 'sidoarjoFs', 
+                'name' => 'Food Services', 
+                'route' => 'dashboard.sidoarjo_fs', 
+                'order' => 3,
+                'permission_name' => 'Sales Food Services'
+            ],
+            [
+                'key' => 'sidoarjoPrivatelabel', 
+                'name' => 'Private Label', 
+                'route' => 'dashboard.sidoarjo_privatelabel', 
+                'order' => 4,
+                'permission_name' => 'Sales Private Label'
+            ],
+            [
+                'key' => 'sidoarjoRetail', 
+                'name' => 'Retail (MT & GT)', 
+                'route' => 'dashboard.sidoarjo_retail', 
+                'order' => 5,
+                'permission_name' => 'Sales Retail'
+            ],
+            [
+                'key' => 'sidoarjoFsm', 
+                'name' => 'Food Services Manager', 
+                'route' => 'dashboard.sidoarjo_fsm', 
+                'order' => 6,
+                'permission_name' => 'Sales FSM'
+            ],
         ];
 
         foreach ($salesItems as $item) {
-            DashboardMenu::firstOrCreate(
+            DashboardMenu::updateOrCreate(
                 ['key' => $item['key']],
                 [
                     'name' => $item['name'],
@@ -64,15 +102,16 @@ class DashboardMenuSeeder extends Seeder
                     'parent_id' => $sidoarjo->id,
                     'order' => $item['order'],
                     'is_active' => true,
+                    'permission_name' => $item['permission_name'],
                 ]
             );
-            Permission::firstOrCreate(['name' => $item['key'] . ' view']);
+            $this->createPermissions($item['permission_name']);
         }
 
         // =====================
         // LOGISTIC DASHBOARD
         // =====================
-        $logistic = DashboardMenu::firstOrCreate(
+        $logistic = DashboardMenu::updateOrCreate(
             ['key' => 'logistics'],
             [
                 'name' => 'Logistic Dashboard',
@@ -80,17 +119,30 @@ class DashboardMenuSeeder extends Seeder
                 'type' => 'header',
                 'order' => 2,
                 'is_active' => true,
+                'permission_name' => 'Logistic Dashboard',
             ]
         );
-        Permission::firstOrCreate(['name' => 'logistic view']);
+        $this->createPermissions('Logistic Dashboard');
 
         $logisticItems = [
-            ['key' => 'logisticInventoryStatus', 'name' => 'Inventory Status', 'route' => 'dashboard.logistic_inventory_status', 'order' => 1],
-            ['key' => 'logisticInventoryMOI', 'name' => 'MOI Inventory', 'route' => 'dashboard.logistic_inventory_moi', 'order' => 2],
+            [
+                'key' => 'logisticInventoryStatus', 
+                'name' => 'Inventory Status', 
+                'route' => 'dashboard.logistic_inventory_status', 
+                'order' => 1,
+                'permission_name' => 'Logistic Inventory Status'
+            ],
+            [
+                'key' => 'logisticInventoryMOI', 
+                'name' => 'MOI Inventory', 
+                'route' => 'dashboard.logistic_inventory_moi', 
+                'order' => 2,
+                'permission_name' => 'Logistic MOI Inventory'
+            ],
         ];
 
         foreach ($logisticItems as $item) {
-            DashboardMenu::firstOrCreate(
+            DashboardMenu::updateOrCreate(
                 ['key' => $item['key']],
                 [
                     'name' => $item['name'],
@@ -99,15 +151,16 @@ class DashboardMenuSeeder extends Seeder
                     'parent_id' => $logistic->id,
                     'order' => $item['order'],
                     'is_active' => true,
+                    'permission_name' => $item['permission_name'],
                 ]
             );
-            Permission::firstOrCreate(['name' => $item['key'] . ' view']);
+            $this->createPermissions($item['permission_name']);
         }
 
         // =====================
         // OPERATIONAL DASHBOARD
         // =====================
-        $operational = DashboardMenu::firstOrCreate(
+        $operational = DashboardMenu::updateOrCreate(
             ['key' => 'operational'],
             [
                 'name' => 'Operational Dashboard',
@@ -115,16 +168,23 @@ class DashboardMenuSeeder extends Seeder
                 'type' => 'header',
                 'order' => 3,
                 'is_active' => true,
+                'permission_name' => 'Operational Dashboard',
             ]
         );
-        Permission::firstOrCreate(['name' => 'operational view']);
+        $this->createPermissions('Operational Dashboard');
 
         $operationalItems = [
-            ['key' => 'operationalPms', 'name' => 'PMS', 'route' => 'dashboard.operational_pms', 'order' => 1],
+            [
+                'key' => 'operationalPms', 
+                'name' => 'PMS', 
+                'route' => 'dashboard.operational_pms', 
+                'order' => 1,
+                'permission_name' => 'Operational PMS'
+            ],
         ];
 
         foreach ($operationalItems as $item) {
-            DashboardMenu::firstOrCreate(
+            DashboardMenu::updateOrCreate(
                 ['key' => $item['key']],
                 [
                     'name' => $item['name'],
@@ -133,11 +193,28 @@ class DashboardMenuSeeder extends Seeder
                     'parent_id' => $operational->id,
                     'order' => $item['order'],
                     'is_active' => true,
+                    'permission_name' => $item['permission_name'],
                 ]
             );
-            Permission::firstOrCreate(['name' => $item['key'] . ' view']);
+            $this->createPermissions($item['permission_name']);
         }
 
         $this->command->info('Dashboard Menus seeded successfully!');
+    }
+
+    /**
+     * Create view and update permissions for a given name
+     */
+    private function createPermissions(string $name): void
+    {
+        $baseName = strtolower($name);
+        
+        // Create view permission
+        Permission::firstOrCreate(['name' => $baseName . ' view']);
+        
+        // Create update permission
+        Permission::firstOrCreate(['name' => $baseName . ' update']);
+        
+        $this->command->line("  Created permissions: {$baseName} view, {$baseName} update");
     }
 }

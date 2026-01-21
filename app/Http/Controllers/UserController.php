@@ -24,7 +24,7 @@ class UserController extends Controller implements HasMiddleware
             new Middleware('permission:users view', only: ['index','show']),
             new Middleware('permission:users create', only: ['create', 'store']),
             new Middleware('permission:users edit', only: ['edit', 'update']),
-            new Middleware('permission:users delete', only: ['destroy']),
+            new Middleware('permission:users delete', only: ['destroy', 'bulkDelete']),
         ];
     }
 
@@ -268,5 +268,27 @@ class UserController extends Controller implements HasMiddleware
 
         // 4. Redirect dengan pesan sukses
         return redirect()->route('dashboard.index')->with('success', 'Password Anda berhasil diubah.');
+    }
+
+    /**
+     * Bulk delete users
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:users,id'
+        ]);
+
+        try {
+            // Don't allow deleting the current user
+            $ids = collect($request->ids)->reject(fn($id) => $id == auth()->id());
+            
+            User::whereIn('id', $ids)->delete();
+            return redirect()->route('users.index')
+                ->with('success', $ids->count() . ' users deleted successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete users: ' . $e->getMessage());
+        }
     }
 }

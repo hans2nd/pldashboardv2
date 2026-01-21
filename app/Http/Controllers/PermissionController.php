@@ -19,19 +19,28 @@ class PermissionController extends Controller implements HasMiddleware
             new Middleware('permission:permission view', only: ['index','show']),
             new Middleware('permission:permission create', only: ['create', 'store']),
             new Middleware('permission:permission edit', only: ['edit', 'update']),
-            new Middleware('permission:permission delete', only: ['destroy']),
+            new Middleware('permission:permission delete', only: ['destroy', 'bulkDelete']),
         ];
     }
+    
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Permission::query();
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+        
         $data = [
             'title' => 'Page Permissions',
             'breadcrumbs' => 'Permissions',
             'menu' => 'permissions',
-            'permissions' => Permission::orderBy('created_at','desc')->paginate(10)
+            'permissions' => $query->orderBy('name', 'asc')->paginate(20)
         ];
 
         return view('permissions.list', $data);
@@ -135,6 +144,25 @@ class PermissionController extends Controller implements HasMiddleware
             return redirect()->route('permissions.index')->with('success', 'Permission deleted successfully');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Failed to delete permission'. $e->getMessage());
+        }
+    }
+
+    /**
+     * Bulk delete permissions
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:permissions,id'
+        ]);
+
+        try {
+            Permission::whereIn('id', $request->ids)->delete();
+            return redirect()->route('permissions.index')
+                ->with('success', count($request->ids) . ' permissions deleted successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete permissions: ' . $e->getMessage());
         }
     }
 }

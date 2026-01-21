@@ -37,8 +37,8 @@ class DashboardController extends Controller implements HasMiddleware
             
             // 2. Terapkan permission spesifik HANYA pada route yang memerlukannya
             
-            // Metode sales (index, show dihilangkan)
-            new Middleware('permission:sales view', only: [
+            // Metode sales - gunakan permission parent "sales dashboard view"
+            new Middleware('permission:sales dashboard view', only: [
                 'sdaAllSales', 
                 'sidoarjo_fs', 
                 'sidoarjo_distributor', 
@@ -47,14 +47,14 @@ class DashboardController extends Controller implements HasMiddleware
                 'sidoarjo_privatelabel',
             ]),
             
-            // Metode logistic
-            new Middleware('permission:logistic view', only: [
+            // Metode logistic - gunakan permission parent "logistic dashboard view"
+            new Middleware('permission:logistic dashboard view', only: [
                 'logistic_inventory_status', 
                 'logistic_inventory_moi'
             ]),
 
-            // Metode operational
-            new Middleware('permission:operational view', only: [
+            // Metode operational - gunakan permission parent "operational dashboard view"
+            new Middleware('permission:operational dashboard view', only: [
                 'operationalPms',
             ]),
         ];

@@ -40,15 +40,18 @@ Route::middleware('authcheck')->group(function() {
     # Operational Dashboard
     Route::get('/operational/pms', [DashboardController::class, 'operationalPms'])->name('dashboard.operational_pms');
 
-    # Master Data
+    # Master Data - Users
+    Route::delete('users/bulk-delete', [UserController::class, 'bulkDelete'])->name('users.bulk-delete');
     Route::resource('users', UserController::class);
     Route::put('users/{user:username}/password', [UserController::class, 'updatePassword'])->name('users.password.update');
     Route::put('/profile/password', [UserController::class, 'updateSelfPassword'])->name('user.self.password.update');
     
     # Roles
+    Route::delete('roles/bulk-delete', [RoleController::class, 'bulkDelete'])->name('roles.bulk-delete');
     Route::resource('roles', RoleController::class);
     
     # Permissions
+    Route::delete('permissions/bulk-delete', [PermissionController::class, 'bulkDelete'])->name('permissions.bulk-delete');
     Route::resource('permissions', PermissionController::class);
     
     # Menu Management
