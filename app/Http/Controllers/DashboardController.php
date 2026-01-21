@@ -177,7 +177,7 @@ class DashboardController extends Controller implements HasMiddleware
         $data = [
             'title' => 'Dashboard Logistic',
             'breadcrumbs' => 'Inventory Status',
-            'menu' => 'logistic',
+            'menu' => $key,
             'iframe' => $iframe
         ];
 
@@ -194,7 +194,7 @@ class DashboardController extends Controller implements HasMiddleware
         $data = [
             'title' => 'Dashboard Logistic',
             'breadcrumbs' => 'Inventory MOI',
-            'menu' => 'inventoryMOI',
+            'menu' => $key,
             'iframe' => $iframe
         ];
 

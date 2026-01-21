@@ -63,11 +63,11 @@ return [
         'permission' => 'logistic view',
         'collapse_id' => 'logisticMenu',
         'items' => [
-            'logistic' => [
+            'logisticInventoryStatus' => [
                 'label' => 'Inventory Status',
                 'route' => 'dashboard.logistic_inventory_status',
             ],
-            'inventoryMOI' => [
+            'logisticInventoryMOI' => [
                 'label' => 'MOI Inventory',
                 'route' => 'dashboard.logistic_inventory_moi',
             ],
