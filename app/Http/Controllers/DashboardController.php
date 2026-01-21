@@ -237,27 +237,27 @@ class DashboardController extends Controller implements HasMiddleware
         $iframeCode = $request->input('iframe_code');
         
         // 2. Ekstrak 'src' dan 'title' dari kode iframe
-        $src = $this->extractAttribute($iframeCode, 'src');
-        $title = $this->extractAttribute($iframeCode, 'title');
+        $src = $this->dashboardService->extractAttribute($iframeCode, 'src');
+        $title = $this->dashboardService->extractAttribute($iframeCode, 'title');
 
         if (!$src) {
             return response()->json(['success' => false, 'message' => 'Gagal mengekstrak atribut SRC dari kode iframe. Pastikan tag <iframe> sudah benar.'], 400);
         }
 
-        // Jika title tidak ditemukan, gunakan 'breadcrumbs' sebagai fallback, atau gunakan nilai saat ini.
-        // Di sini saya akan menggunakan title yang diekstrak, jika tidak ada, gunakan 'Default Title'
+        // Jika title tidak ditemukan, gunakan key sebagai fallback
         if (!$title) {
              $title = 'Dashboard Setting (' . $key . ')'; 
         }
 
         try {
-            // 3. Cari dan update data iframe
-            $iframe = DashboardSetting::where('key', $key)->firstOrFail();
-            
-            $iframe->update([
-                'title' => $title,
-                'src' => $src,
-            ]);
+            // 3. Update atau create data iframe
+            $iframe = DashboardSetting::updateOrCreate(
+                ['key' => $key],
+                [
+                    'title' => $title,
+                    'src' => $src,
+                ]
+            );
 
             return response()->json([
                 'success' => true, 
@@ -269,7 +269,7 @@ class DashboardController extends Controller implements HasMiddleware
             // Log error untuk debugging yang lebih baik
             \Log::error("Failed to update iframe (Key: $key): " . $e->getMessage());
             
-            return response()->json(['success' => false, 'message' => 'Gagal mengupdate iframe. Silakan periksa log server.'], 500);
+            return response()->json(['success' => false, 'message' => 'Gagal mengupdate iframe: ' . $e->getMessage()], 500);
         }
     }
     
