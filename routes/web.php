@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PermissionController;
 
@@ -36,18 +37,24 @@ Route::middleware('authcheck')->group(function() {
     Route::get('/sdaFSM', [DashboardController::class, 'sidoarjo_fsm'])->name('dashboard.sidoarjo_fsm');
     Route::get('/sdaPrivateLabel', [DashboardController::class, 'sidoarjo_privatelabel'])->name('dashboard.sidoarjo_privatelabel');
 
-
-
-        Route::resource('users', UserController::class);
-        Route::put('users/{user:username}/password', [UserController::class, 'updatePassword'])->name('users.password.update');
-        Route::put('/profile/password', [UserController::class, 'updateSelfPassword'])->name('user.self.password.update');
-        # Roles
-        Route::resource('roles', RoleController::class);
-        // Route::delete('/roles',[RoleController::class, 'destroy'])->name('roles.destroy');
-        # Permissions
-        Route::resource('permissions', PermissionController::class);
-        // Route::delete('/permissions',[PermissionController::class, 'destroy'])->name('permissions.destroy');
-
     # Operational Dashboard
     Route::get('/operational/pms', [DashboardController::class, 'operationalPms'])->name('dashboard.operational_pms');
+
+    # Master Data
+    Route::resource('users', UserController::class);
+    Route::put('users/{user:username}/password', [UserController::class, 'updatePassword'])->name('users.password.update');
+    Route::put('/profile/password', [UserController::class, 'updateSelfPassword'])->name('user.self.password.update');
+    
+    # Roles
+    Route::resource('roles', RoleController::class);
+    
+    # Permissions
+    Route::resource('permissions', PermissionController::class);
+    
+    # Menu Management
+    Route::resource('menus', MenuController::class);
+    Route::post('menus/{menu}/generate-permissions', [MenuController::class, 'generatePermissions'])->name('menus.generate-permissions');
+
+    # Dynamic Menu Route - handles all menus from database
+    Route::get('/menu/{key}', [DashboardController::class, 'dynamicMenu'])->name('dashboard.dynamic_menu');
 });

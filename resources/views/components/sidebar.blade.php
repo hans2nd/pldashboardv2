@@ -62,6 +62,58 @@
                     @endcan
                 @endif
 
+                {{-- Dynamic Menus from Database --}}
+                @php
+                    $dbMenus = \App\Models\DashboardMenu::root()->active()->with('activeChildren')->orderBy('order')->get();
+                    $isSuperAdmin = auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin');
+                    
+                    // Helper function to get dynamic menu URL
+                    $getDynamicMenuUrl = function($menuKey, $customRoute = null) {
+                        // If custom route is set and exists, use it
+                        if (!empty($customRoute) && \Illuminate\Support\Facades\Route::has($customRoute)) {
+                            return route($customRoute);
+                        }
+                        // Otherwise use dynamic menu route
+                        return route('dashboard.dynamic_menu', ['key' => $menuKey]);
+                    };
+                @endphp
+                
+                @foreach($dbMenus as $dbMenu)
+                    @if($isSuperAdmin || auth()->user()->can($dbMenu->permission_name))
+                        @if($dbMenu->hasChildren())
+                            {{-- Menu with children --}}
+                            <li class="nav-item {{ in_array($slot->toHtml(), $dbMenu->activeChildren->pluck('key')->toArray()) ? 'active' : '' }}">
+                                <a data-bs-toggle="collapse" href="#dbMenu{{ $dbMenu->id }}">
+                                    <i class="{{ $dbMenu->icon ?? 'fas fa-folder' }}"></i>
+                                    <p>{{ $dbMenu->name }}</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse {{ in_array($slot->toHtml(), $dbMenu->activeChildren->pluck('key')->toArray()) ? 'show' : '' }}" id="dbMenu{{ $dbMenu->id }}">
+                                    <ul class="nav nav-collapse subnav">
+                                        @foreach($dbMenu->activeChildren as $child)
+                                            @if($isSuperAdmin || auth()->user()->can($child->permission_name))
+                                                <li class="nav-item {{ $slot->toHtml() === $child->key ? 'active' : '' }}">
+                                                    <a href="{{ $getDynamicMenuUrl($child->key, $child->route) }}">
+                                                        <span class="sub-item">{{ $child->name }}</span>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </li>
+                        @else
+                            {{-- Single menu item --}}
+                            <li class="nav-item {{ $slot->toHtml() === $dbMenu->key ? 'active' : '' }}">
+                                <a href="{{ $getDynamicMenuUrl($dbMenu->key, $dbMenu->route) }}">
+                                    <i class="{{ $dbMenu->icon ?? 'fas fa-file' }}"></i>
+                                    <p>{{ $dbMenu->name }}</p>
+                                </a>
+                            </li>
+                        @endif
+                    @endif
+                @endforeach
+
 
                 @can('users view')
                     <li class="nav-section">
@@ -96,6 +148,15 @@
                         <a href="{{ route('permissions.index') }}">
                             <i class="fas fa-check-square"></i>
                             <p>Permission</p>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('menu view')
+                    <li class="nav-item {{ $slot == 'menus' ? 'active' : '' }}">
+                        <a href="{{ route('menus.index') }}">
+                            <i class="fas fa-bars"></i>
+                            <p>Menu Management</p>
                         </a>
                     </li>
                 @endcan

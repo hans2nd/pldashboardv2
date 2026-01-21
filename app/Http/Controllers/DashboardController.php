@@ -272,5 +272,39 @@ class DashboardController extends Controller implements HasMiddleware
             return response()->json(['success' => false, 'message' => 'Gagal mengupdate iframe: ' . $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Dynamic menu handler for menus created via Menu Management
+     */
+    public function dynamicMenu(string $key)
+    {
+        // Find menu from database
+        $menu = \App\Models\DashboardMenu::where('key', $key)->first();
+        
+        if (!$menu) {
+            abort(404, 'Menu tidak ditemukan');
+        }
+
+        // Check permission (superadmin/admin bypass)
+        $user = auth()->user();
+        if (!$user->hasRole('superadmin') && !$user->hasRole('admin')) {
+            if (!$user->can($menu->permission_name)) {
+                abort(403, 'Anda tidak memiliki akses ke menu ini');
+            }
+        }
+
+        // Get iframe settings
+        $iframe = $this->getIframeByKey($key, $menu->name);
+
+        $data = [
+            'title' => $menu->parent ? $menu->parent->name : $menu->name,
+            'breadcrumbs' => $menu->name,
+            'menu' => $key,
+            'iframe' => $iframe,
+            'menuItem' => $menu,
+        ];
+
+        return view('dynamic.dashboard', $data);
+    }
     
 }
