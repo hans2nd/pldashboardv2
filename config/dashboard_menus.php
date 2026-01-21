@@ -85,20 +85,10 @@ return [
         'permission' => 'operational view',
         'collapse_id' => 'operationalMenu',
         'items' => [
-            'operationalProduction' => [
-                'label' => 'Production Status',
-                'route' => 'dashboard.operational_production',
-                'permission' => 'operational production view',
-            ],
-            'operationalQuality' => [
-                'label' => 'Quality Control',
-                'route' => 'dashboard.operational_quality',
-                'permission' => 'operational quality view',
-            ],
-            'operationalMaintenance' => [
-                'label' => 'Maintenance',
-                'route' => 'dashboard.operational_maintenance',
-                'permission' => 'operational maintenance view',
+            'operationalPms' => [
+                'label' => 'PMS',
+                'route' => 'dashboard.operational_pms',
+                'permission' => 'operational pms view',
             ],
         ],
     ],

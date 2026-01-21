@@ -15,9 +15,7 @@ class OperationalPermissionSeeder extends Seeder
     {
         $permissions = [
             'operational view',
-            'operational production view',
-            'operational quality view',
-            'operational maintenance view',
+            'operational pms view',
         ];
 
         foreach ($permissions as $permission) {

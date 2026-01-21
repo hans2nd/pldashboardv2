@@ -55,9 +55,7 @@ class DashboardController extends Controller implements HasMiddleware
 
             // Metode operational
             new Middleware('permission:operational view', only: [
-                'operationalProduction',
-                'operationalQuality',
-                'operationalMaintenance',
+                'operationalPms',
             ]),
         ];
 
@@ -207,10 +205,10 @@ class DashboardController extends Controller implements HasMiddleware
     // OPERATIONAL DASHBOARD
     // ========================
 
-    public function operationalProduction()
+    public function operationalPms()
     {
-        $key = 'operationalProduction';
-        $breadcrumbs = 'Production Status';
+        $key = 'operationalPms';
+        $breadcrumbs = 'PMS';
 
         $iframe = $this->getIframeByKey($key, $breadcrumbs);
 
@@ -221,41 +219,7 @@ class DashboardController extends Controller implements HasMiddleware
             'iframe' => $iframe
         ];
 
-        return view('operational.production', $data);
-    }
-
-    public function operationalQuality()
-    {
-        $key = 'operationalQuality';
-        $breadcrumbs = 'Quality Control';
-
-        $iframe = $this->getIframeByKey($key, $breadcrumbs);
-
-        $data = [
-            'title' => 'Operational Dashboard',
-            'breadcrumbs' => $breadcrumbs,
-            'menu' => $key,
-            'iframe' => $iframe
-        ];
-
-        return view('operational.quality', $data);
-    }
-
-    public function operationalMaintenance()
-    {
-        $key = 'operationalMaintenance';
-        $breadcrumbs = 'Maintenance';
-
-        $iframe = $this->getIframeByKey($key, $breadcrumbs);
-
-        $data = [
-            'title' => 'Operational Dashboard',
-            'breadcrumbs' => $breadcrumbs,
-            'menu' => $key,
-            'iframe' => $iframe
-        ];
-
-        return view('operational.maintenance', $data);
+        return view('operational.pms', $data);
     }
 
     public function update(Request $request, string $key)
