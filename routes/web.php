@@ -57,6 +57,8 @@ Route::middleware('authcheck')->group(function() {
     # Menu Management
     Route::resource('menus', MenuController::class);
     Route::post('menus/{menu}/generate-permissions', [MenuController::class, 'generatePermissions'])->name('menus.generate-permissions');
+    Route::post('menus/{menu}/children', [MenuController::class, 'storeChild'])->name('menus.children.store');
+    Route::delete('menus/{menu}/children/{child}', [MenuController::class, 'destroyChild'])->name('menus.children.destroy');
 
     # Dynamic Menu Route - handles all menus from database
     Route::get('/menu/{key}', [DashboardController::class, 'dynamicMenu'])->name('dashboard.dynamic_menu');

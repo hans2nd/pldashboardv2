@@ -58,9 +58,11 @@
                                             <input type="checkbox" id="selectAll" class="form-check-input">
                                         </th>
                                         <th style="width:5%;">#</th>
-                                        <th>Name</th>
-                                        <th style="width:15%;">Guard</th>
-                                        <th style="width:15%;">Action</th>
+                                        <th><x-sortable-header column="name" label="Name" currentSort="name" /></th>
+                                        <th>Linked Menu</th>
+                                        <th style="width:10%;"><x-sortable-header column="guard_name" label="Guard" /></th>
+                                        <th><x-sortable-header column="created_at" label="Created" /></th>
+                                        <th style="width:12%;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,7 +76,22 @@
                                             <td>
                                                 <span class="badge bg-light text-dark">{{ $permission->name }}</span>
                                             </td>
+                                            <td>
+                                                @php
+                                                    $linkedMenus = \App\Models\DashboardMenu::findByPermission($permission->name);
+                                                @endphp
+                                                @if($linkedMenus->isNotEmpty())
+                                                    @foreach($linkedMenus as $linkedMenu)
+                                                        <a href="{{ route('menus.edit', $linkedMenu) }}" class="badge bg-info text-white text-decoration-none me-1">
+                                                            <i class="fas fa-bars me-1"></i>{{ $linkedMenu->name }}
+                                                        </a>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted"><small>-</small></span>
+                                                @endif
+                                            </td>
                                             <td>{{ $permission->guard_name }}</td>
+                                            <td><small>{{ $permission->created_at->format('d M Y H:i') }}</small></td>
                                             <td>
                                                 <a href="{{ route('permissions.edit', $permission->id) }}" 
                                                    class="btn btn-warning btn-sm">
@@ -93,7 +110,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center py-4">
+                                            <td colspan="7" class="text-center py-4">
                                                 <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                                                 <p class="text-muted">No permissions found</p>
                                             </td>

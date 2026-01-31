@@ -36,11 +36,16 @@ class PermissionController extends Controller implements HasMiddleware
             $query->where('name', 'like', "%{$search}%");
         }
         
+        // Sorting
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
+        $query->orderBy($sort, $direction);
+        
         $data = [
             'title' => 'Page Permissions',
             'breadcrumbs' => 'Permissions',
             'menu' => 'permissions',
-            'permissions' => $query->orderBy('name', 'asc')->paginate(20)
+            'permissions' => $query->paginate(20)->appends($request->query())
         ];
 
         return view('permissions.list', $data);

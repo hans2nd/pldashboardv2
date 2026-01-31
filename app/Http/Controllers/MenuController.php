@@ -34,13 +34,32 @@ class MenuController extends Controller implements HasMiddleware
     /**
      * Display a listing of menus
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Sorting
+        $sort = $request->get('sort', 'order');
+        $direction = $request->get('direction', 'asc');
+        
+        // Get menus with sorting
+        $menus = DashboardMenu::root()
+            ->with(['children' => function ($query) use ($sort, $direction) {
+                $query->with(['children' => function ($q) use ($sort, $direction) {
+                    $q->orderBy($sort, $direction);
+                }])->orderBy($sort, $direction);
+            }])
+            ->orderBy($sort, $direction)
+            ->get();
+        
         $data = [
             'title' => 'Menu Management',
             'breadcrumbs' => 'Menus',
             'menu' => 'menus',
-            'menus' => $this->menuService->getAllMenusTree(),
+            'menus' => $menus,
+            // Statistics
+            'totalUsers' => \App\Models\User::count(),
+            'totalRoles' => \Spatie\Permission\Models\Role::count(),
+            'totalPermissions' => \Spatie\Permission\Models\Permission::count(),
+            'totalMenus' => DashboardMenu::count(),
         ];
 
         return view('menus.list', $data);
@@ -224,6 +243,111 @@ class MenuController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Permissions berhasil di-generate: ' . count($permissions) . ' permission');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Gagal generate permissions: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Store a new child menu via AJAX
+     */
+    public function storeChild(Request $request, DashboardMenu $menu)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:2|max:255',
+            'icon' => 'nullable|string|max:100',
+            'route' => 'nullable|string|max:255',
+            'type' => 'required|in:dashboard,link,header',
+            'order' => 'nullable|integer|min:0',
+            'is_active' => 'boolean',
+            'auto_permission' => 'boolean',
+        ], [
+            'name.required' => 'Nama menu harus diisi',
+            'name.min' => 'Nama menu minimal 2 karakter',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $child = DashboardMenu::create([
+                'name' => $request->name,
+                'key' => $this->menuService->generateKey($request->name),
+                'icon' => $request->icon,
+                'route' => $request->route,
+                'parent_id' => $menu->id,
+                'type' => $request->type,
+                'order' => $request->order ?? 0,
+                'is_active' => $request->boolean('is_active', true),
+            ]);
+
+            // Auto-generate permission if checked
+            if ($request->boolean('auto_permission', true)) {
+                $this->menuService->generateAllPermissions($child);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Child menu berhasil ditambahkan!',
+                'data' => [
+                    'id' => $child->id,
+                    'name' => $child->name,
+                    'key' => $child->key,
+                    'icon' => $child->icon ?? 'fas fa-file',
+                    'route' => $child->route,
+                    'type' => $child->type,
+                    'is_active' => $child->is_active,
+                    'edit_url' => route('menus.edit', $child),
+                    'delete_url' => route('menus.children.destroy', [$menu, $child]),
+                ]
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat child menu: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a child menu via AJAX
+     */
+    public function destroyChild(DashboardMenu $menu, DashboardMenu $child)
+    {
+        // Verify the child belongs to this parent
+        if ($child->parent_id !== $menu->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Child menu tidak ditemukan pada parent ini'
+            ], 404);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $childName = $child->name;
+            $child->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Child menu '{$childName}' berhasil dihapus!"
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus child menu: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

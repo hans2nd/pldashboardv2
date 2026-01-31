@@ -5,216 +5,138 @@ namespace Database\Seeders;
 use App\Models\DashboardMenu;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class DashboardMenuSeeder extends Seeder
 {
     /**
-     * Seed the existing dashboard menus to database with clean permission names
+     * Seed the dashboard menus with automatic permission creation
+     * 
+     * This seeder creates:
+     * - Dashboard menu hierarchy (parent -> child -> grandchild)
+     * - Associated permissions for each menu (only 'view' permission)
      */
     public function run(): void
     {
-        $this->command->info('Seeding Dashboard Menus with clean permissions...');
+        // Reset cached permissions
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $this->command->info('Seeding Dashboard Menus...');
 
         // =====================
         // SALES DASHBOARD
         // =====================
-        $sales = DashboardMenu::updateOrCreate(
-            ['key' => 'sales'],
-            [
-                'name' => 'Sales Dashboard',
-                'icon' => 'fas fa-chart-line',
-                'type' => 'header',
-                'order' => 1,
-                'is_active' => true,
-                'permission_name' => 'Sales Dashboard',
-            ]
-        );
-        $this->createPermissions('Sales Dashboard');
+        $sales = $this->createMenu([
+            'key' => 'sales',
+            'name' => 'Sales Dashboard',
+            'icon' => 'fas fa-chart-line',
+            'type' => 'header',
+            'order' => 1,
+        ]);
 
         // Sidoarjo submenu (parent for sales items)
-        $sidoarjo = DashboardMenu::updateOrCreate(
-            ['key' => 'sidoarjo'],
-            [
-                'name' => 'Sidoarjo',
-                'icon' => 'fas fa-map-marker-alt',
-                'type' => 'header',
-                'parent_id' => $sales->id,
-                'order' => 1,
-                'is_active' => true,
-                'permission_name' => 'Sales Sidoarjo',
-            ]
-        );
-        $this->createPermissions('Sales Sidoarjo');
+        $sidoarjo = $this->createMenu([
+            'key' => 'sidoarjo',
+            'name' => 'Sidoarjo',
+            'icon' => 'fas fa-map-marker-alt',
+            'type' => 'header',
+            'parent_id' => $sales->id,
+            'order' => 1,
+        ]);
 
         // Sales items under Sidoarjo
         $salesItems = [
-            [
-                'key' => 'sdaAllSales', 
-                'name' => 'Over All Channel', 
-                'route' => 'dashboard.sdaAllSales', 
-                'order' => 1,
-                'permission_name' => 'Sales All Channel'
-            ],
-            [
-                'key' => 'sidoarjoDist', 
-                'name' => 'Distributor', 
-                'route' => 'dashboard.sidoarjo_distributor', 
-                'order' => 2,
-                'permission_name' => 'Sales Distributor'
-            ],
-            [
-                'key' => 'sidoarjoFs', 
-                'name' => 'Food Services', 
-                'route' => 'dashboard.sidoarjo_fs', 
-                'order' => 3,
-                'permission_name' => 'Sales Food Services'
-            ],
-            [
-                'key' => 'sidoarjoPrivatelabel', 
-                'name' => 'Private Label', 
-                'route' => 'dashboard.sidoarjo_privatelabel', 
-                'order' => 4,
-                'permission_name' => 'Sales Private Label'
-            ],
-            [
-                'key' => 'sidoarjoRetail', 
-                'name' => 'Retail (MT & GT)', 
-                'route' => 'dashboard.sidoarjo_retail', 
-                'order' => 5,
-                'permission_name' => 'Sales Retail'
-            ],
-            [
-                'key' => 'sidoarjoFsm', 
-                'name' => 'Food Services Manager', 
-                'route' => 'dashboard.sidoarjo_fsm', 
-                'order' => 6,
-                'permission_name' => 'Sales FSM'
-            ],
+            ['key' => 'sdaAllSales', 'name' => 'Over All Channel', 'route' => 'dashboard.sdaAllSales', 'order' => 1],
+            ['key' => 'sidoarjoDist', 'name' => 'Distributor', 'route' => 'dashboard.sidoarjo_distributor', 'order' => 2],
+            ['key' => 'sidoarjoFs', 'name' => 'Food Services', 'route' => 'dashboard.sidoarjo_fs', 'order' => 3],
+            ['key' => 'sidoarjoPrivatelabel', 'name' => 'Private Label', 'route' => 'dashboard.sidoarjo_privatelabel', 'order' => 4],
+            ['key' => 'sidoarjoRetail', 'name' => 'Retail (MT & GT)', 'route' => 'dashboard.sidoarjo_retail', 'order' => 5],
+            ['key' => 'sidoarjoFsm', 'name' => 'Food Services Manager', 'route' => 'dashboard.sidoarjo_fsm', 'order' => 6],
         ];
 
         foreach ($salesItems as $item) {
-            DashboardMenu::updateOrCreate(
-                ['key' => $item['key']],
-                [
-                    'name' => $item['name'],
-                    'route' => $item['route'],
-                    'type' => 'dashboard',
-                    'parent_id' => $sidoarjo->id,
-                    'order' => $item['order'],
-                    'is_active' => true,
-                    'permission_name' => $item['permission_name'],
-                ]
-            );
-            $this->createPermissions($item['permission_name']);
+            $this->createMenu([
+                'key' => $item['key'],
+                'name' => $item['name'],
+                'route' => $item['route'],
+                'type' => 'dashboard',
+                'parent_id' => $sidoarjo->id,
+                'order' => $item['order'],
+            ]);
         }
 
         // =====================
         // LOGISTIC DASHBOARD
         // =====================
-        $logistic = DashboardMenu::updateOrCreate(
-            ['key' => 'logistics'],
-            [
-                'name' => 'Logistic Dashboard',
-                'icon' => 'fas fa-car-side',
-                'type' => 'header',
-                'order' => 2,
-                'is_active' => true,
-                'permission_name' => 'Logistic Dashboard',
-            ]
-        );
-        $this->createPermissions('Logistic Dashboard');
+        $logistic = $this->createMenu([
+            'key' => 'logistics',
+            'name' => 'Logistic Dashboard',
+            'icon' => 'fas fa-car-side',
+            'type' => 'header',
+            'order' => 2,
+        ]);
 
         $logisticItems = [
-            [
-                'key' => 'logisticInventoryStatus', 
-                'name' => 'Inventory Status', 
-                'route' => 'dashboard.logistic_inventory_status', 
-                'order' => 1,
-                'permission_name' => 'Logistic Inventory Status'
-            ],
-            [
-                'key' => 'logisticInventoryMOI', 
-                'name' => 'MOI Inventory', 
-                'route' => 'dashboard.logistic_inventory_moi', 
-                'order' => 2,
-                'permission_name' => 'Logistic MOI Inventory'
-            ],
+            ['key' => 'logisticInventoryStatus', 'name' => 'Inventory Status', 'route' => 'dashboard.logistic_inventory_status', 'order' => 1],
+            ['key' => 'logisticInventoryMOI', 'name' => 'MOI Inventory', 'route' => 'dashboard.logistic_inventory_moi', 'order' => 2],
         ];
 
         foreach ($logisticItems as $item) {
-            DashboardMenu::updateOrCreate(
-                ['key' => $item['key']],
-                [
-                    'name' => $item['name'],
-                    'route' => $item['route'],
-                    'type' => 'dashboard',
-                    'parent_id' => $logistic->id,
-                    'order' => $item['order'],
-                    'is_active' => true,
-                    'permission_name' => $item['permission_name'],
-                ]
-            );
-            $this->createPermissions($item['permission_name']);
+            $this->createMenu([
+                'key' => $item['key'],
+                'name' => $item['name'],
+                'route' => $item['route'],
+                'type' => 'dashboard',
+                'parent_id' => $logistic->id,
+                'order' => $item['order'],
+            ]);
         }
 
         // =====================
         // OPERATIONAL DASHBOARD
         // =====================
-        $operational = DashboardMenu::updateOrCreate(
-            ['key' => 'operational'],
-            [
-                'name' => 'Operational Dashboard',
-                'icon' => 'fas fa-cogs',
-                'type' => 'header',
-                'order' => 3,
-                'is_active' => true,
-                'permission_name' => 'Operational Dashboard',
-            ]
-        );
-        $this->createPermissions('Operational Dashboard');
+        $operational = $this->createMenu([
+            'key' => 'operational',
+            'name' => 'Operational Dashboard',
+            'icon' => 'fas fa-cogs',
+            'type' => 'header',
+            'order' => 3,
+        ]);
 
         $operationalItems = [
-            [
-                'key' => 'operationalPms', 
-                'name' => 'PMS', 
-                'route' => 'dashboard.operational_pms', 
-                'order' => 1,
-                'permission_name' => 'Operational PMS'
-            ],
+            ['key' => 'operationalPms', 'name' => 'PMS', 'route' => 'dashboard.operational_pms', 'order' => 1],
         ];
 
         foreach ($operationalItems as $item) {
-            DashboardMenu::updateOrCreate(
-                ['key' => $item['key']],
-                [
-                    'name' => $item['name'],
-                    'route' => $item['route'],
-                    'type' => 'dashboard',
-                    'parent_id' => $operational->id,
-                    'order' => $item['order'],
-                    'is_active' => true,
-                    'permission_name' => $item['permission_name'],
-                ]
-            );
-            $this->createPermissions($item['permission_name']);
+            $this->createMenu([
+                'key' => $item['key'],
+                'name' => $item['name'],
+                'route' => $item['route'],
+                'type' => 'dashboard',
+                'parent_id' => $operational->id,
+                'order' => $item['order'],
+            ]);
         }
 
         $this->command->info('Dashboard Menus seeded successfully!');
     }
 
     /**
-     * Create view and update permissions for a given name
+     * Create a menu and its permission
      */
-    private function createPermissions(string $name): void
+    private function createMenu(array $data): DashboardMenu
     {
-        $baseName = strtolower($name);
+        $menu = DashboardMenu::updateOrCreate(
+            ['key' => $data['key']],
+            array_merge($data, ['is_active' => true])
+        );
+
+        // Create permission for this menu (only view)
+        $permissionName = $menu->permission_name; // This uses the accessor
+        Permission::firstOrCreate(['name' => $permissionName]);
         
-        // Create view permission
-        Permission::firstOrCreate(['name' => $baseName . ' view']);
-        
-        // Create update permission
-        Permission::firstOrCreate(['name' => $baseName . ' update']);
-        
-        $this->command->line("  Created permissions: {$baseName} view, {$baseName} update");
+        $this->command->line("  Created menu: {$menu->name} -> Permission: {$permissionName}");
+
+        return $menu;
     }
 }

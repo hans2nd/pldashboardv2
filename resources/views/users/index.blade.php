@@ -73,10 +73,11 @@
                                             <input type="checkbox" id="selectAll" class="form-check-input">
                                         </th>
                                         <th style="width:5%;">#</th>
-                                        <th>Name</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
+                                        <th><x-sortable-header column="name" label="Name" currentSort="name" /></th>
+                                        <th><x-sortable-header column="username" label="Username" /></th>
+                                        <th><x-sortable-header column="email" label="Email" /></th>
                                         <th>Role</th>
+                                        <th><x-sortable-header column="created_at" label="Created" /></th>
                                         <th style="width:12%;">Action</th>
                                     </tr>
                                 </thead>
@@ -96,6 +97,7 @@
                                                     <span class="badge bg-info">{{ ucfirst($role->name) }}</span>
                                                 @endforeach
                                             </td>
+                                            <td><small>{{ $user->created_at->format('d M Y H:i') }}</small></td>
                                             <td>
                                                 <a href="{{ route('users.edit', $user->username) }}" 
                                                    class="btn btn-warning btn-sm">
@@ -114,7 +116,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center py-4">
+                                            <td colspan="8" class="text-center py-4">
                                                 <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                                                 <p class="text-muted">No users found</p>
                                             </td>

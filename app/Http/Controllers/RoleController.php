@@ -37,11 +37,16 @@ class RoleController extends Controller implements HasMiddleware
             $query->where('name', 'like', "%{$search}%");
         }
         
+        // Sorting
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
+        $query->orderBy($sort, $direction);
+        
         $data = [
             'title' => 'Page Roles',
             'breadcrumbs' => 'Roles',
             'menu' => 'roles',
-            'roles' => $query->orderBy('name', 'asc')->paginate(20)
+            'roles' => $query->paginate(20)->appends($request->query())
         ];
 
         return view('roles.list', $data);

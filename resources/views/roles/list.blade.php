@@ -58,8 +58,9 @@
                                             <input type="checkbox" id="selectAll" class="form-check-input">
                                         </th>
                                         <th style="width:5%;">#</th>
-                                        <th style="width:20%;">Name</th>
+                                        <th style="width:20%;"><x-sortable-header column="name" label="Name" currentSort="name" /></th>
                                         <th>Permissions</th>
+                                        <th><x-sortable-header column="created_at" label="Created" /></th>
                                         <th style="width:15%;">Action</th>
                                     </tr>
                                 </thead>
@@ -82,6 +83,7 @@
                                                     <span class="badge bg-secondary">+{{ $role->permissions->count() - 5 }} more</span>
                                                 @endif
                                             </td>
+                                            <td><small>{{ $role->created_at->format('d M Y H:i') }}</small></td>
                                             <td>
                                                 <a href="{{ route('roles.edit', $role->id) }}" 
                                                    class="btn btn-warning btn-sm">
@@ -100,7 +102,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center py-4">
+                                            <td colspan="6" class="text-center py-4">
                                                 <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                                                 <p class="text-muted">No roles found</p>
                                             </td>
