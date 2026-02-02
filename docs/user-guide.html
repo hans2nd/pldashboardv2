@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Pengguna - PL Dashboard V2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1cc88a;
+            --secondary-color: #858796;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+            min-height: 100vh;
+        }
+        .doc-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .doc-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .doc-header {
+            background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .doc-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .doc-body {
+            padding: 40px;
+        }
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin: 30px 0 20px 0;
+            font-weight: 600;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fc 0%, #eaecf4 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .feature-icon.green { background: #1cc88a20; color: #1cc88a; }
+        .feature-icon.blue { background: #4e73df20; color: #4e73df; }
+        .feature-icon.cyan { background: #36b9cc20; color: #36b9cc; }
+        .feature-icon.yellow { background: #f6c23e20; color: #f6c23e; }
+        .step-card {
+            display: flex;
+            align-items: flex-start;
+            background: #f8f9fc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .step-number {
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 1.1rem;
+        }
+        .step-content h5 {
+            color: #2e2e2e;
+            margin-bottom: 5px;
+        }
+        .step-content p {
+            color: #6e6e6e;
+            margin-bottom: 0;
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #1cc88a15 0%, #1cc88a08 100%);
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+        .tip-box i {
+            color: var(--primary-color);
+        }
+        .warning-box {
+            background: linear-gradient(135deg, #f6c23e15 0%, #f6c23e08 100%);
+            border-left: 4px solid var(--warning-color);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+        .info-box {
+            background: linear-gradient(135deg, #36b9cc15 0%, #36b9cc08 100%);
+            border-left: 4px solid var(--info-color);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+        .screenshot-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #ced4da;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+            margin: 15px 0;
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .nav-item-custom {
+            background: #f8f9fc;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #5a5c69;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .nav-item-custom:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        .nav-item-custom i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        .faq-item {
+            background: #f8f9fc;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 20px;
+            font-weight: 600;
+            color: #2e2e2e;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question:hover {
+            background: #eaecf4;
+        }
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #5a5c69;
+        }
+        .keyboard-shortcut {
+            display: inline-block;
+            background: #e3e6f0;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid #d1d3e2;
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+        }
+        .footer a {
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+            .doc-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="doc-container">
+        <div class="doc-card">
+            <div class="doc-header">
+                <h1><i class="fas fa-book-reader me-3"></i>Panduan Pengguna</h1>
+                <p class="mb-3">PL Dashboard V2 - Panduan Lengkap untuk Pengguna</p>
+                <span class="badge bg-light text-success fs-6">Versi 2.0</span>
+            </div>
+            
+            <div class="doc-body">
+                <!-- Welcome Section -->
+                <div class="text-center mb-5">
+                    <h3 class="text-success">Selamat Datang di PL Dashboard V2!</h3>
+                    <p class="text-muted">Panduan ini akan membantu Anda memahami cara menggunakan aplikasi dashboard.</p>
+                </div>
+
+                <!-- Quick Navigation -->
+                <div class="nav-grid">
+                    <a href="#getting-started" class="nav-item-custom">
+                        <i class="fas fa-play-circle"></i> Memulai
+                    </a>
+                    <a href="#navigation" class="nav-item-custom">
+                        <i class="fas fa-compass"></i> Navigasi
+                    </a>
+                    <a href="#viewing-dashboard" class="nav-item-custom">
+                        <i class="fas fa-chart-bar"></i> Melihat Dashboard
+                    </a>
+                    <a href="#profile" class="nav-item-custom">
+                        <i class="fas fa-user-circle"></i> Profil & Password
+                    </a>
+                    <a href="#tips" class="nav-item-custom">
+                        <i class="fas fa-lightbulb"></i> Tips & Trik
+                    </a>
+                    <a href="#faq" class="nav-item-custom">
+                        <i class="fas fa-question-circle"></i> FAQ
+                    </a>
+                </div>
+
+                <!-- Section: Getting Started -->
+                <section id="getting-started">
+                    <h4 class="section-title"><i class="fas fa-play-circle me-2"></i>Memulai</h4>
+                    
+                    <h5 class="mt-4 mb-3">Login ke Aplikasi</h5>
+                    
+                    <div class="step-card">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h5>Buka Halaman Login</h5>
+                            <p>Akses URL aplikasi yang diberikan oleh administrator. Anda akan melihat halaman login.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h5>Masukkan Email & Password</h5>
+                            <p>Gunakan email dan password yang telah diberikan oleh administrator.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <h5>Klik Tombol Login</h5>
+                            <p>Setelah berhasil login, Anda akan diarahkan ke halaman dashboard utama.</p>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong><i class="fas fa-lightbulb me-2"></i>Tips:</strong> 
+                        Jika lupa password, hubungi administrator untuk reset password.
+                    </div>
+                </section>
+
+                <!-- Section: Navigation -->
+                <section id="navigation">
+                    <h4 class="section-title"><i class="fas fa-compass me-2"></i>Navigasi Aplikasi</h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon green">
+                                    <i class="fas fa-bars"></i>
+                                </div>
+                                <h5>Sidebar Menu</h5>
+                                <p>Menu utama aplikasi berada di sebelah kiri. Klik menu untuk membuka dashboard atau fitur.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon blue">
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <h5>Submenu</h5>
+                                <p>Beberapa menu memiliki submenu. Klik menu induk untuk melihat daftar submenu.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon cyan">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h5>Profile Dropdown</h5>
+                                <p>Klik nama Anda di pojok kanan atas untuk akses profil dan logout.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon yellow">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <h5>Breadcrumb</h5>
+                                <p>Navigasi breadcrumb di atas halaman menunjukkan posisi Anda saat ini.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <strong><i class="fas fa-info-circle me-2"></i>Info:</strong> 
+                        Menu yang Anda lihat tergantung pada hak akses (permission) yang diberikan oleh administrator.
+                    </div>
+                </section>
+
+                <!-- Section: Viewing Dashboard -->
+                <section id="viewing-dashboard">
+                    <h4 class="section-title"><i class="fas fa-chart-bar me-2"></i>Melihat Dashboard</h4>
+                    
+                    <p>Dashboard menampilkan data dalam bentuk visual (grafik, tabel, dll) untuk memudahkan analisis.</p>
+
+                    <h5 class="mt-4 mb-3">Cara Melihat Dashboard</h5>
+                    
+                    <div class="step-card">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h5>Pilih Menu Dashboard</h5>
+                            <p>Klik menu dashboard yang ingin Anda lihat dari sidebar (contoh: Sales Dashboard → Sidoarjo → Distributor)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h5>Tunggu Loading</h5>
+                            <p>Dashboard akan dimuat dalam iframe. Tunggu beberapa saat hingga data tampil sepenuhnya.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <h5>Interaksi dengan Dashboard</h5>
+                            <p>Anda dapat berinteraksi dengan dashboard: filter data, klik grafik untuk detail, dll (tergantung konfigurasi).</p>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Fitur Dashboard</h5>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="background: #1cc88a; color: white;">Fitur</th>
+                                <th style="background: #1cc88a; color: white;">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fas fa-filter text-success me-2"></i>Filter</td>
+                                <td>Beberapa dashboard memiliki filter untuk menyaring data berdasarkan periode, kategori, dll</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-expand text-success me-2"></i>Fullscreen</td>
+                                <td>Klik tombol fullscreen (jika ada) untuk melihat dashboard dalam layar penuh</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-sync text-success me-2"></i>Refresh</td>
+                                <td>Klik tombol refresh atau tekan F5 untuk memuat ulang data terbaru</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-download text-success me-2"></i>Export</td>
+                                <td>Beberapa dashboard mendukung export data ke PDF atau Excel (tergantung konfigurasi)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <strong><i class="fas fa-lightbulb me-2"></i>Tips:</strong> 
+                        Jika dashboard tidak tampil atau error, coba refresh halaman atau hubungi administrator.
+                    </div>
+                </section>
+
+                <!-- Section: Profile -->
+                <section id="profile">
+                    <h4 class="section-title"><i class="fas fa-user-circle me-2"></i>Profil & Password</h4>
+                    
+                    <h5 class="mt-4 mb-3">Mengubah Password</h5>
+                    
+                    <div class="step-card">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h5>Klik Nama Anda</h5>
+                            <p>Di pojok kanan atas, klik nama atau foto profil Anda untuk membuka dropdown menu.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h5>Pilih "Ubah Password"</h5>
+                            <p>Klik opsi "Ubah Password" atau "Change Password" dari menu dropdown.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <h5>Isi Form</h5>
+                            <p>Masukkan password lama, password baru, dan konfirmasi password baru.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            <h5>Simpan</h5>
+                            <p>Klik tombol "Simpan" untuk menyimpan password baru Anda.</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong><i class="fas fa-exclamation-triangle me-2"></i>Perhatian:</strong> 
+                        <ul class="mb-0 mt-2">
+                            <li>Password minimal 8 karakter</li>
+                            <li>Password baru tidak boleh sama dengan password lama</li>
+                            <li>Simpan password Anda dengan aman</li>
+                        </ul>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Logout</h5>
+                    <p>Untuk keluar dari aplikasi:</p>
+                    <ol>
+                        <li>Klik nama Anda di pojok kanan atas</li>
+                        <li>Pilih "Logout" dari menu dropdown</li>
+                        <li>Anda akan diarahkan ke halaman login</li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <strong><i class="fas fa-lightbulb me-2"></i>Tips Keamanan:</strong> 
+                        Selalu logout setelah selesai menggunakan aplikasi, terutama di komputer bersama.
+                    </div>
+                </section>
+
+                <!-- Section: Tips -->
+                <section id="tips">
+                    <h4 class="section-title"><i class="fas fa-lightbulb me-2"></i>Tips & Trik</h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <h6><i class="fas fa-keyboard text-success me-2"></i>Keyboard Shortcuts</h6>
+                                <p class="mb-2"><span class="keyboard-shortcut">F5</span> Refresh halaman</p>
+                                <p class="mb-2"><span class="keyboard-shortcut">Ctrl + F</span> Cari di halaman</p>
+                                <p class="mb-0"><span class="keyboard-shortcut">F11</span> Fullscreen browser</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <h6><i class="fas fa-tachometer-alt text-success me-2"></i>Performa</h6>
+                                <p class="mb-0">Untuk performa terbaik, gunakan browser modern seperti Chrome, Firefox, atau Edge versi terbaru.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <h6><i class="fas fa-mobile-alt text-success me-2"></i>Mobile</h6>
+                                <p class="mb-0">Aplikasi responsif dan dapat diakses melalui smartphone atau tablet.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <h6><i class="fas fa-bookmark text-success me-2"></i>Bookmark</h6>
+                                <p class="mb-0">Bookmark halaman dashboard favorit Anda untuk akses cepat di kemudian hari.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: FAQ -->
+                <section id="faq">
+                    <h4 class="section-title"><i class="fas fa-question-circle me-2"></i>FAQ (Pertanyaan Umum)</h4>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Bagaimana jika saya lupa password?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Hubungi administrator untuk mereset password Anda. Administrator dapat mengubah password dari menu Users.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Mengapa saya tidak bisa melihat menu tertentu?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Menu yang tampil tergantung pada hak akses (permission) Anda. Jika Anda memerlukan akses ke menu tertentu, hubungi administrator untuk meminta penambahan permission.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Dashboard tidak tampil atau error, apa yang harus dilakukan?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <ol class="mb-0">
+                                <li>Coba refresh halaman dengan menekan F5</li>
+                                <li>Clear cache browser</li>
+                                <li>Coba buka di browser lain</li>
+                                <li>Jika masih error, hubungi administrator</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Data dashboard tidak update, bagaimana cara refresh?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Tekan F5 atau klik tombol refresh di browser. Data dashboard biasanya diupdate secara otomatis sesuai jadwal yang dikonfigurasi oleh administrator.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Apakah saya bisa mengakses dari smartphone?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Ya, aplikasi ini responsif dan dapat diakses melalui browser di smartphone atau tablet. Namun, untuk pengalaman terbaik, disarankan menggunakan layar yang lebih besar.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Section -->
+                <section id="contact" class="mt-5">
+                    <div class="text-center p-4" style="background: linear-gradient(135deg, #f8f9fc 0%, #eaecf4 100%); border-radius: 15px;">
+                        <h5 class="text-success mb-3">Butuh Bantuan?</h5>
+                        <p class="text-muted mb-3">Jika Anda memerlukan bantuan lebih lanjut, silakan hubungi:</p>
+                        <p class="mb-1"><i class="fas fa-envelope text-success me-2"></i>admin@example.com</p>
+                        <p class="mb-0"><i class="fas fa-user-shield text-success me-2"></i>Administrator IT</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>PL Dashboard V2 - Panduan Pengguna</p>
+            <p>Dokumentasi dibuat: 31 Januari 2026</p>
+            <p><a href="admin-guide.html">← Lihat Panduan Administrator</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle FAQ answers
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('i');
+                
+                if (answer.style.display === 'none' || !answer.style.display) {
+                    answer.style.display = 'block';
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    answer.style.display = 'none';
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        });
+
+        // Initially hide FAQ answers
+        document.querySelectorAll('.faq-answer').forEach(answer => {
+            answer.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

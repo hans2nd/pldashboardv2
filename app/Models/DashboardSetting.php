@@ -12,6 +12,8 @@ class DashboardSetting extends Model
     protected $fillable = [
         'key',
         'title',
-        'src'
+        'src',
+        'embed_type',
+        'embed_code'
     ];
 }

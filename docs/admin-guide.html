@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Administrator - PL Dashboard V2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .doc-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .doc-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .doc-header {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .doc-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .doc-header .badge {
+            font-size: 1rem;
+            padding: 10px 20px;
+        }
+        .doc-body {
+            padding: 40px;
+        }
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin: 30px 0 20px 0;
+            font-weight: 600;
+        }
+        .feature-card {
+            background: #f8f9fc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateX(5px);
+        }
+        .feature-card h5 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fc;
+            border-radius: 10px;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .alert-tip {
+            background: linear-gradient(135deg, #1cc88a20 0%, #1cc88a10 100%);
+            border-left: 4px solid var(--success-color);
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+        }
+        .alert-warning-custom {
+            background: linear-gradient(135deg, #f6c23e20 0%, #f6c23e10 100%);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+        }
+        .alert-danger-custom {
+            background: linear-gradient(135deg, #e74a3b20 0%, #e74a3b10 100%);
+            border-left: 4px solid var(--danger-color);
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .nav-pills .nav-link {
+            color: var(--secondary-color);
+            border-radius: 10px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        .nav-pills .nav-link.active {
+            background: var(--primary-color);
+        }
+        .nav-pills .nav-link:hover:not(.active) {
+            background: #e3e6f0;
+        }
+        .toc-link {
+            display: block;
+            padding: 8px 15px;
+            color: #5a5c69;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 3px 0;
+            transition: all 0.2s;
+        }
+        .toc-link:hover {
+            background: #e3e6f0;
+            color: var(--primary-color);
+        }
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        .icon-box.primary { background: #4e73df20; color: var(--primary-color); }
+        .icon-box.success { background: #1cc88a20; color: var(--success-color); }
+        .icon-box.warning { background: #f6c23e20; color: var(--warning-color); }
+        .icon-box.danger { background: #e74a3b20; color: var(--danger-color); }
+        table {
+            width: 100%;
+            margin: 15px 0;
+        }
+        table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 15px;
+        }
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        table tr:hover {
+            background: #f8f9fc;
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .footer a {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="doc-container">
+        <div class="doc-card">
+            <div class="doc-header">
+                <h1><i class="fas fa-cogs me-3"></i>Panduan Administrator</h1>
+                <p class="mb-3">PL Dashboard V2 - Sistem Manajemen Dashboard</p>
+                <span class="badge bg-light text-primary">Versi 2.0</span>
+            </div>
+            
+            <div class="doc-body">
+                <!-- Table of Contents -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4 class="section-title"><i class="fas fa-list me-2"></i>Daftar Isi</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="#overview" class="toc-link">1. Gambaran Umum</a>
+                                <a href="#login" class="toc-link">2. Login & Akses</a>
+                                <a href="#user-management" class="toc-link">3. Manajemen Pengguna</a>
+                                <a href="#role-management" class="toc-link">4. Manajemen Role</a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="#permission-management" class="toc-link">5. Manajemen Permission</a>
+                                <a href="#menu-management" class="toc-link">6. Manajemen Menu</a>
+                                <a href="#dashboard-management" class="toc-link">7. Pengaturan Dashboard</a>
+                                <a href="#troubleshooting" class="toc-link">8. Troubleshooting</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 1: Overview -->
+                <section id="overview">
+                    <h4 class="section-title"><i class="fas fa-info-circle me-2"></i>1. Gambaran Umum</h4>
+                    <p>PL Dashboard V2 adalah sistem manajemen dashboard yang memungkinkan Anda mengelola berbagai dashboard Power BI atau sumber data lainnya melalui satu antarmuka terpadu.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box primary"><i class="fas fa-users"></i></div>
+                                    <div>
+                                        <h5 class="mb-1">Multi-User</h5>
+                                        <small>Kelola banyak pengguna dengan roles berbeda</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box success"><i class="fas fa-shield-alt"></i></div>
+                                    <div>
+                                        <h5 class="mb-1">Permission-Based</h5>
+                                        <small>Kontrol akses granular per menu/fitur</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box warning"><i class="fas fa-bars"></i></div>
+                                    <div>
+                                        <h5 class="mb-1">Dynamic Menu</h5>
+                                        <small>Menu dashboard yang dapat dikustomisasi</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box danger"><i class="fas fa-chart-bar"></i></div>
+                                    <div>
+                                        <h5 class="mb-1">Iframe Dashboard</h5>
+                                        <small>Embed dashboard dari berbagai sumber</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Login -->
+                <section id="login">
+                    <h4 class="section-title"><i class="fas fa-sign-in-alt me-2"></i>2. Login & Akses</h4>
+                    
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <strong>Buka halaman login</strong>
+                            <p class="mb-0">Akses aplikasi melalui URL yang telah disediakan. Anda akan melihat halaman login.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <strong>Masukkan kredensial</strong>
+                            <p class="mb-0">Gunakan email dan password administrator yang telah diberikan.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <strong>Akses Dashboard</strong>
+                            <p class="mb-0">Setelah login, Anda akan diarahkan ke halaman dashboard utama.</p>
+                        </div>
+                    </div>
+
+                    <div class="alert-tip">
+                        <strong><i class="fas fa-lightbulb me-2"></i>Tips:</strong> 
+                        Default login admin adalah <code>admin@example.com</code> dengan password <code>12345678</code>
+                    </div>
+                </section>
+
+                <!-- Section 3: User Management -->
+                <section id="user-management">
+                    <h4 class="section-title"><i class="fas fa-users me-2"></i>3. Manajemen Pengguna</h4>
+                    
+                    <p>Menu <strong>Users</strong> memungkinkan Anda mengelola semua pengguna sistem.</p>
+
+                    <h5 class="mt-4 mb-3">3.1 Melihat Daftar Pengguna</h5>
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            Klik menu <strong>Users</strong> di sidebar
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            Anda dapat melihat daftar semua pengguna beserta role mereka
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            Gunakan fitur <strong>Search</strong> untuk mencari pengguna tertentu
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            Klik header kolom untuk <strong>Sorting</strong> ascending/descending
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">3.2 Menambah Pengguna Baru</h5>
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            Klik tombol <strong>+ Create</strong>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            Isi form: Nama Lengkap, Username, Email, Role, dan Password
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            Pilih role yang sesuai untuk pengguna
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            Klik <strong>Submit</strong> untuk menyimpan
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">3.3 Mengedit/Menghapus Pengguna</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Aksi</th>
+                                <th>Cara Melakukan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fas fa-edit text-warning"></i> Edit</td>
+                                <td>Klik tombol kuning pada baris pengguna, ubah data, lalu simpan</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-trash text-danger"></i> Hapus</td>
+                                <td>Klik tombol merah, konfirmasi penghapusan</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-trash-alt text-danger"></i> Bulk Delete</td>
+                                <td>Centang beberapa pengguna, klik "Delete Selected"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert-warning-custom">
+                        <strong><i class="fas fa-exclamation-triangle me-2"></i>Perhatian:</strong> 
+                        Anda tidak dapat menghapus akun yang sedang Anda gunakan.
+                    </div>
+                </section>
+
+                <!-- Section 4: Role Management -->
+                <section id="role-management">
+                    <h4 class="section-title"><i class="fas fa-user-tag me-2"></i>4. Manajemen Role</h4>
+                    
+                    <p>Role menentukan hak akses pengguna berdasarkan kumpulan permission.</p>
+
+                    <h5 class="mt-4 mb-3">4.1 Membuat Role Baru</h5>
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            Buka menu <strong>Roles</strong> dan klik <strong>+ Create</strong>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            Masukkan nama role (contoh: "Sales Manager", "Viewer")
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            Centang permission yang ingin diberikan ke role tersebut
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            Klik <strong>Submit</strong> untuk menyimpan
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">4.2 Contoh Konfigurasi Role</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Permission yang Disarankan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Admin</strong></td>
+                                <td>Semua permission (akses penuh)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sales Manager</strong></td>
+                                <td>sales dashboard view, sales sidoarjo view, dan semua menu sales</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Viewer</strong></td>
+                                <td>Hanya permission dengan suffix "view"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Section 5: Permission Management -->
+                <section id="permission-management">
+                    <h4 class="section-title"><i class="fas fa-key me-2"></i>5. Manajemen Permission</h4>
+                    
+                    <p>Permission adalah hak akses individual yang dapat diberikan ke role.</p>
+
+                    <h5 class="mt-4 mb-3">5.1 Format Permission</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Format</th>
+                                <th>Contoh</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>{resource} view</code></td>
+                                <td>users view</td>
+                                <td>Izin untuk melihat daftar</td>
+                            </tr>
+                            <tr>
+                                <td><code>{resource} create</code></td>
+                                <td>users create</td>
+                                <td>Izin untuk membuat data baru</td>
+                            </tr>
+                            <tr>
+                                <td><code>{resource} edit</code></td>
+                                <td>users edit</td>
+                                <td>Izin untuk mengedit data</td>
+                            </tr>
+                            <tr>
+                                <td><code>{resource} delete</code></td>
+                                <td>users delete</td>
+                                <td>Izin untuk menghapus data</td>
+                            </tr>
+                            <tr>
+                                <td><code>{menu name} view</code></td>
+                                <td>sales dashboard view</td>
+                                <td>Izin untuk melihat menu dashboard</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h5 class="mt-4 mb-3">5.2 Hubungan Permission & Menu</h5>
+                    <p>Setiap menu dashboard memiliki permission terkait yang ditampilkan di kolom "Linked Menu":</p>
+                    <ul>
+                        <li><span class="badge bg-success">Hijau</span> = Permission sudah ada dan terhubung ke menu</li>
+                        <li><span class="badge bg-secondary">Abu-abu</span> = Permission belum dibuat</li>
+                    </ul>
+
+                    <div class="alert-tip">
+                        <strong><i class="fas fa-lightbulb me-2"></i>Tips:</strong> 
+                        Klik badge permission untuk langsung ke halaman menu terkait, dan sebaliknya.
+                    </div>
+                </section>
+
+                <!-- Section 6: Menu Management -->
+                <section id="menu-management">
+                    <h4 class="section-title"><i class="fas fa-bars me-2"></i>6. Manajemen Menu</h4>
+                    
+                    <p>Menu Management memungkinkan Anda mengelola struktur menu sidebar.</p>
+
+                    <h5 class="mt-4 mb-3">6.1 Struktur Menu</h5>
+                    <div class="code-block">
+├── Parent Menu (Header)
+│   ├── Child Menu 1 (Dashboard/Link)
+│   ├── Child Menu 2
+│   │   └── Grandchild Menu (Level 3)
+│   └── Child Menu 3
+                    </div>
+
+                    <h5 class="mt-4 mb-3">6.2 Tipe Menu</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tipe</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-primary">Header</span></td>
+                                <td>Menu induk yang berisi submenu, tidak bisa diklik langsung</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info">Dashboard</span></td>
+                                <td>Menu yang menampilkan iframe dashboard (Power BI, dll)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-secondary">Link</span></td>
+                                <td>Menu yang mengarah ke route internal aplikasi</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h5 class="mt-4 mb-3">6.3 Menambah Menu Baru</h5>
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            Klik <strong>+ Create</strong> di halaman Menus
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            Isi: Nama Menu, Key (unik), Icon, Tipe, Route (jika dashboard/link)
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            Pilih Parent Menu jika ini adalah child menu
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            Permission otomatis dibuat berdasarkan nama menu
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">6.4 Menambah Child Menu (AJAX)</h5>
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            Buka halaman <strong>Edit</strong> menu parent
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            Di bagian "Child Menus", klik <strong>+ Add Child</strong>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            Isi form modal dan klik Save - child langsung muncul tanpa reload
+                        </div>
+                    </div>
+
+                    <div class="alert-danger-custom">
+                        <strong><i class="fas fa-exclamation-circle me-2"></i>Penting:</strong> 
+                        Menghapus menu akan <strong>otomatis menghapus</strong> permission terkait dan semua child menu beserta permission mereka.
+                    </div>
+                </section>
+
+                <!-- Section 7: Dashboard Management -->
+                <section id="dashboard-management">
+                    <h4 class="section-title"><i class="fas fa-chart-bar me-2"></i>7. Pengaturan Dashboard</h4>
+                    
+                    <p>Dashboard ditampilkan dalam iframe dan dapat dikonfigurasi melalui menu management.</p>
+
+                    <h5 class="mt-4 mb-3">7.1 Mengatur URL Dashboard</h5>
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            Buka menu dashboard yang ingin dikonfigurasi (klik dari sidebar)
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            Klik tombol <strong>Edit URL</strong> (jika memiliki permission "iframe edit")
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            Masukkan URL embed Power BI atau dashboard lainnya
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            Simpan dan dashboard akan langsung terupdate
+                        </div>
+                    </div>
+
+                    <div class="alert-tip">
+                        <strong><i class="fas fa-lightbulb me-2"></i>Tips Power BI:</strong> 
+                        Gunakan URL "Publish to web" dari Power BI untuk mendapatkan URL embed yang dapat diakses publik.
+                    </div>
+                </section>
+
+                <!-- Section 8: Troubleshooting -->
+                <section id="troubleshooting">
+                    <h4 class="section-title"><i class="fas fa-tools me-2"></i>8. Troubleshooting</h4>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Masalah</th>
+                                <th>Solusi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>User tidak bisa login</td>
+                                <td>
+                                    1. Pastikan email dan password benar<br>
+                                    2. Reset password melalui menu Users<br>
+                                    3. Periksa apakah akun sudah diaktifkan
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>User tidak bisa akses menu tertentu</td>
+                                <td>
+                                    1. Periksa role user<br>
+                                    2. Pastikan role memiliki permission yang diperlukan<br>
+                                    3. Cek di halaman Permission apakah permission sudah ada
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Menu tidak muncul di sidebar</td>
+                                <td>
+                                    1. Pastikan menu berstatus "Active"<br>
+                                    2. Periksa permission user<br>
+                                    3. Clear cache browser
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Dashboard tidak tampil</td>
+                                <td>
+                                    1. Periksa URL iframe sudah benar<br>
+                                    2. Pastikan URL mengizinkan embedding<br>
+                                    3. Cek console browser untuk error
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Permission tidak tersinkronisasi</td>
+                                <td>
+                                    Jalankan command: <code>php artisan permission:cache-reset</code>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h5 class="mt-4 mb-3">Command Artisan Berguna</h5>
+                    <div class="code-block">
+# Reset permission cache
+php artisan permission:cache-reset
+
+# Clear all cache
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+
+# Re-seed database (HATI-HATI: akan menghapus data!)
+php artisan migrate:fresh --seed
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>PL Dashboard V2 - Administrator Guide</p>
+            <p>Dokumentasi dibuat: 31 Januari 2026</p>
+            <p><a href="user-guide.html">Lihat Panduan Pengguna →</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

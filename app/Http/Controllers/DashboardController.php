@@ -231,45 +231,75 @@ class DashboardController extends Controller implements HasMiddleware
 
         if ($validator->fails()) {
             // Menggunakan Laravel default response for API
-            return response()->json(['success' => false, 'message' => 'Input iframe tidak valid.', 'errors' => $validator->errors()], 422);
+            return response()->json(['success' => false, 'message' => 'Input tidak valid.', 'errors' => $validator->errors()], 422);
         }
 
-        $iframeCode = $request->input('iframe_code');
+        $embedCode = $request->input('iframe_code');
         
-        // 2. Ekstrak 'src' dan 'title' dari kode iframe
-        $src = $this->dashboardService->extractAttribute($iframeCode, 'src');
-        $title = $this->dashboardService->extractAttribute($iframeCode, 'title');
+        // 2. Deteksi tipe embed (auto-detect atau dari input)
+        $embedType = $this->dashboardService->detectEmbedType($embedCode);
+        
+        $src = null;
+        $title = null;
+        $cleanEmbedCode = null;
 
-        if (!$src) {
-            return response()->json(['success' => false, 'message' => 'Gagal mengekstrak atribut SRC dari kode iframe. Pastikan tag <iframe> sudah benar.'], 400);
-        }
+        if ($embedType === 'jotform') {
+            // Proses JotForm embed
+            $dataId = $this->dashboardService->extractJotformDataId($embedCode);
+            
+            if (!$dataId) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Gagal mengekstrak data-id dari kode JotForm. Pastikan kode embed JotForm sudah benar.'
+                ], 400);
+            }
+            
+            // Normalize dan simpan embed code
+            $cleanEmbedCode = $this->dashboardService->normalizeJotformCode($embedCode);
+            $title = 'JotForm Report (' . $key . ')';
+            $src = 'jotform://' . $dataId; // Virtual src for reference
+            
+        } else {
+            // Proses iframe biasa (Power BI, dll)
+            $src = $this->dashboardService->extractAttribute($embedCode, 'src');
+            $title = $this->dashboardService->extractAttribute($embedCode, 'title');
 
-        // Jika title tidak ditemukan, gunakan key sebagai fallback
-        if (!$title) {
-             $title = 'Dashboard Setting (' . $key . ')'; 
+            if (!$src) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Gagal mengekstrak atribut SRC dari kode iframe. Pastikan tag <iframe> sudah benar.'
+                ], 400);
+            }
+
+            // Jika title tidak ditemukan, gunakan key sebagai fallback
+            if (!$title) {
+                $title = 'Dashboard Setting (' . $key . ')'; 
+            }
         }
 
         try {
-            // 3. Update atau create data iframe
+            // 3. Update atau create data
             $iframe = DashboardSetting::updateOrCreate(
                 ['key' => $key],
                 [
                     'title' => $title,
                     'src' => $src,
+                    'embed_type' => $embedType,
+                    'embed_code' => $cleanEmbedCode,
                 ]
             );
 
             return response()->json([
                 'success' => true, 
-                'message' => 'Data iframe berhasil diupdate.',
+                'message' => 'Data ' . ($embedType === 'jotform' ? 'JotForm' : 'iframe') . ' berhasil diupdate.',
                 'iframe' => $iframe, 
             ]);
 
         } catch (\Exception $e) {
             // Log error untuk debugging yang lebih baik
-            \Log::error("Failed to update iframe (Key: $key): " . $e->getMessage());
+            \Log::error("Failed to update embed (Key: $key): " . $e->getMessage());
             
-            return response()->json(['success' => false, 'message' => 'Gagal mengupdate iframe: ' . $e->getMessage()], 500);
+            return response()->json(['success' => false, 'message' => 'Gagal mengupdate: ' . $e->getMessage()], 500);
         }
     }
 
