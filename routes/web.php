@@ -9,7 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PermissionController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('redirect');
 });
 
 # Jika user belum login
